@@ -31,12 +31,13 @@ zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 # --- [4. 视觉引擎：Oh My Posh] ---
-# 逻辑判定：若存在 oh-my-posh 算子，则执行渲染映射
 if command -v oh-my-posh &> /dev/null; then
-    # 路径指向你的 GitHub 同步仓库
+    # 映射 $DOTFILES/posh/theme.omp.json 到当前终端提示符
     eval "$(oh-my-posh init zsh --config $DOTFILES/posh/theme.omp.json)"
 else
-    # 备用：若未安装 OMP，回退至基础 prompt
+    # 核心修复：必须先 autoload 才能定义 prompt 算子
+    autoload -Uz promptinit && promptinit
+    # 只有当 OMP 缺失时，才降级使用基础主题
     prompt adam1
 fi
 
