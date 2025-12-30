@@ -13,7 +13,8 @@
           "background": "#61afef",
           "options": {
             "style": "folder"
-          }
+          },
+          "template": "  {{ .Path }} "
         },
         {
           "type": "git",
@@ -23,7 +24,23 @@
           "background": "#fffb38",
           "options": {
             "fetch_status": true
-          }
+          },
+          "template": " {{ .HEAD }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }} "
+        },
+        {
+          "type": "status",
+          "style": "diamond",
+          "foreground": "#ffffff",
+          "background": "#3A3F4B",
+          "background_templates": [
+            "{{ if .Error }}#f44747{{ end }}"
+          ],
+          "leading_diamond": "",
+          "trailing_diamond": "\uE0B0",
+          "options": {
+            "always_enabled": true
+          },
+          "template": " {{ if .Error }}✘{{ else }}✔{{ end }} "
         }
       ]
     }

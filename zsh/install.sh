@@ -99,4 +99,13 @@ else
     echo -e "${GREEN}✅ 检测到 ${FONT_NAME} 字体已存在${NC}"
 fi
 
+# --- [5. 登录 Shell 自动切换] ---
+# 检查当前是否为交互式 Bash，如果是，则切换到 Zsh
+if [ -t 1 ] && [ -n "$BASH_VERSION" ]; then
+    # 确保 zsh 存在，避免死循环或无法登录
+    if command -v zsh &> /dev/null; then
+        exec zsh -l
+    fi
+fi
+
 echo -e "\n${CYAN}🎉 配置完成! 请运行 'source ~/.zshrc' 或重启终端生效。${NC}"
