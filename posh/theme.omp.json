@@ -24,8 +24,11 @@
           "type": "git",
           "style": "plain",
           "foreground": "#98c379",
-          "options": { "fetch_status": true },
-          "template": "on <#e6db74> {{ .HEAD }}</>{{ if .Working.Changed }} <#f92672>Δ</>{{ end }}{{ if .Staging.Changed }} <#a6e22e>+</>{{ end }} "
+          "options": {
+            "fetch_status": true,
+            "branch_icon": " "
+          },
+          "template": "on <#e6db74>{{ .HEAD }}</>{{ if .Working.Changed }} <#f92672>Δ{{ .Working.Modified }}</>{{ end }}{{ if .Staging.Changed }} <#a6e22e>+{{ .Staging.Added }}</>{{ end }} "
         }
       ]
     },
@@ -44,7 +47,7 @@
           "type": "sysinfo",
           "style": "plain",
           "foreground": "#83769c",
-          "template": "{{ if .Load1 }}󰻠 {{ printf \"%.2f\" .Load1 }} {{ end }}"
+          "template": "󰻠 {{ printf \"%.2f\" .Load1 }} | 󰍛 {{ (div .UsedMemory .TotalMemory 100.0) | printf \"%.0f\" }}% "
         },
         {
           "type": "time",
@@ -65,7 +68,7 @@
           "foreground": "#ffffff",
           "foreground_templates": [ "{{ if .Error }}#f92672{{ end }}" ],
           "options": { "always_enabled": true },
-          "template": "╰─{{ if .Error }}✘ {{ .Code }}{{ else }}○{{ end }} "
+          "template": "╰─{{ if .Error }}✘ {{ .Code }}{{ else }}○{{ end }}  "
         }
       ]
     }
