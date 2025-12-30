@@ -12,4 +12,11 @@ if (Get-Module -ListAvailable Terminal-Icons) {
 
 # 4. 自定义 Alias (逻辑映射)
 Set-Alias -Name g -Value git
-Set-Alias -Name l -Value ls
+
+# 列表显示增强
+# ll: 详细列表 (Windows 默认 ls 即为详细)
+Set-Alias -Name ll -Value ls
+# la: 显示所有文件 (含隐藏)
+function la { Get-ChildItem -Force @args }
+# l:  显示所有文件 (同 la, 对应 Zsh 的 l)
+function l { Get-ChildItem -Force @args }

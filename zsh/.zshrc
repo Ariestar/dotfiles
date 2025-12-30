@@ -51,6 +51,8 @@ bindkey '^[[F' end-of-line
 # --- [6. 别名与快捷算子 (Aliases)] ---
 alias g='git'
 alias cls='clear'
+alias ll='ls -lh --color=auto'
+alias la='ls -a --color=auto'
 alias l='ls -lah --color=auto'
 # 快速进入 dotfiles 仓库
 alias dot='cd $DOTFILES'

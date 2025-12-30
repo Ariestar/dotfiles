@@ -65,11 +65,13 @@ chmod +x zsh/install.sh
 
 ### 常用别名 (Alias)
 
-| 别名 | 原命令 | 说明 |
-| :--- | :--- | :--- |
-| `g` | `git` | Git 简写 |
-| `l` | `ls` (Windows) / `ls -lah` (Linux) | 列出文件 |
-| `dot` | `cd ~/dotfiles` | 快速跳转到配置仓库 |
+| 别名 | Windows (PowerShell) | Linux/macOS (Zsh) | 说明 |
+| :--- | :--- | :--- | :--- |
+| `g` | `git` | `git` | Git 简写 |
+| `ll` | `ls` (详细) | `ls -lh` | 详细列表 |
+| `la` | `ls -Force` | `ls -a` | 显示所有文件 (含隐藏) |
+| `l` | `ls -Force` | `ls -lah` | 详细列表 + 所有文件 |
+| `dot` | `cd ~/dotfiles` | `cd $DOTFILES` | 快速跳转到配置仓库 |
 
 ## 🔄 更新配置
 
