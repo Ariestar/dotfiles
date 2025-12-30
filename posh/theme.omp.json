@@ -28,7 +28,7 @@
             "fetch_status": true,
             "branch_icon": " "
           },
-          "template": "on <#e6db74>{{ .HEAD }}</>{{ if .Working.Changed }} <#f92672>Δ{{ .Working.Modified }}</>{{ end }}{{ if .Staging.Changed }} <#a6e22e>+{{ .Staging.Added }}</>{{ end }} "
+          "template": "on <#e6db74>{{ .HEAD }}</>{{ if .Working.Changed }} <#f92672> Δ{{ .Working.Modified }}</>{{ end }}{{ if .Staging.Changed }} <#a6e22e> +{{ .Staging.Added }}</>{{ end }} "
         }
       ]
     },
@@ -47,7 +47,7 @@
           "type": "sysinfo",
           "style": "plain",
           "foreground": "#83769c",
-          "template": "󰻠 {{ printf \"%.2f\" .Load1 }} | 󰍛 {{ (div .UsedMemory .TotalMemory 100.0) | printf \"%.0f\" }}% "
+          "template": "󰻠 {{ printf \"%.2f\" .Load1 }} | 󰍛 {{ .MemoryUsage }}% "
         },
         {
           "type": "time",
@@ -68,7 +68,7 @@
           "foreground": "#ffffff",
           "foreground_templates": [ "{{ if .Error }}#f92672{{ end }}" ],
           "options": { "always_enabled": true },
-          "template": "╰─{{ if .Error }}✘ {{ .Code }}{{ else }}○{{ end }}  "
+          "template": "╰─{{ if .Error }}✘ {{ .Code }}{{ else }}○{{ end }} "
         }
       ]
     }
