@@ -6,41 +6,62 @@
       "alignment": "left",
       "segments": [
         {
+          "type": "text",
+          "style": "plain",
+          "foreground": "#ffffff",
+          "template": "╭─"
+        },
+        {
+          "type": "session",
+          "style": "plain",
+          "foreground": "#a6e22e",
+          "template": "{{ .UserName }} "
+        },
+        {
+          "type": "text",
+          "style": "plain",
+          "foreground": "#ffffff",
+          "template": "<#75715e>at</> "
+        },
+        {
+          "type": "session",
+          "style": "plain",
+          "foreground": "#66d9ef",
+          "template": "{{ .HostName }} "
+        },
+        {
+          "type": "text",
+          "style": "plain",
+          "foreground": "#ffffff",
+          "template": "<#75715e>in</> "
+        },
+        {
           "type": "path",
-          "style": "powerline",
-          "powerline_symbol": "\uE0B0",
-          "foreground": "#ffffff",
-          "background": "#61afef",
+          "style": "plain",
+          "foreground": "#f92672",
           "options": {
-            "style": "folder"
+            "style": "full"
           },
-          "template": "  {{ .Path }} "
+          "template": "<b>{{ .Path }}</b> "
         },
         {
-          "type": "git",
-          "style": "powerline",
-          "powerline_symbol": "\uE0B0",
-          "foreground": "#193549",
-          "background": "#fffb38",
-          "options": {
-            "fetch_status": true
-          },
-          "template": " {{ .HEAD }}{{ if .Working.Changed }}  {{ .Working.String }}{{ end }} "
-        },
-        {
-          "type": "status",
-          "style": "diamond",
+          "type": "time",
+          "style": "plain",
           "foreground": "#ffffff",
-          "background": "#3A3F4B",
-          "background_templates": [
-            "{{ if .Error }}#f44747{{ end }}"
-          ],
-          "leading_diamond": "",
-          "trailing_diamond": "\uE0B0",
-          "options": {
-            "always_enabled": true
-          },
-          "template": " {{ if .Error }}✘{{ else }}✔{{ end }} "
+          "template": "{{ .CurrentDate | date \"06-01-02\" }} <#75715e>-</> {{ .CurrentDate | date \"15:04:05\" }}"
+        }
+      ]
+    },
+    {
+      "type": "prompt",
+      "alignment": "left",
+      "newline": true,
+      "segments": [
+        {
+          "type": "text",
+          "style": "plain",
+          "foreground": "#ffffff",
+          "template": "╰─○ "
         }
       ]
     }
