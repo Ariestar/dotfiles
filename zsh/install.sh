@@ -67,4 +67,36 @@ else
      echo -e "${GREEN}✅ Git 已安装${NC}"
 fi
 
+# --- [4.3 CaskaydiaCove Nerd Font 自动化] ---
+FONT_NAME="CaskaydiaCove"
+FONT_DIR="$HOME/.local/share/fonts"
+GITHUB_FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CascadiaCode.zip"
+
+# 确保路径存在
+mkdir -p "$FONT_DIR"
+
+if ! fc-list | grep -qi "Caskaydia"; then
+    echo -e "${YELLOW}📥 正在从 GitHub 下载 ${FONT_NAME}...${NC}"
+    
+    # 创建临时目录
+    TEMP_DIR=$(mktemp -d)
+    
+    # 使用 -L 跟随重定向，下载压缩包
+    curl -fLo "$TEMP_DIR/font.zip" "$GITHUB_FONT_URL"
+    
+    # 解压字体文件 (只提取 .ttf 或 .otf)
+    unzip -q "$TEMP_DIR/font.zip" -d "$TEMP_DIR"
+    cp "$TEMP_DIR/"*Regular*.ttf "$FONT_DIR/"
+    
+    # 刷新字体缓存
+    fc-cache -f -v
+    
+    # 清理现场
+    rm -rf "$TEMP_DIR"
+    
+    echo -e "${GREEN}✅ ${FONT_NAME} 安装完成${NC}"
+else
+    echo -e "${GREEN}✅ 检测到 ${FONT_NAME} 字体已存在${NC}"
+fi
+
 echo -e "\n${CYAN}🎉 配置完成! 请运行 'source ~/.zshrc' 或重启终端生效。${NC}"
