@@ -5,51 +5,30 @@
       "type": "prompt",
       "alignment": "left",
       "segments": [
-        {
-          "type": "text",
-          "style": "plain",
-          "foreground": "#ffffff",
-          "template": "╭─"
-        },
+        { "type": "text", "style": "plain", "foreground": "#ffffff", "template": "╭─" },
         {
           "type": "session",
           "style": "plain",
-          "foreground": "#A6E22E", 
-          "foreground_templates": [
-            "{{ if .SSHSession }}#AE81FF{{ end }}"
-          ],
+          "foreground": "#a6e22e",
+          "foreground_templates": [ "{{ if .SSHSession }}#ae81ff{{ end }}" ],
           "template": "{{ .UserName }}@{{ .HostName }} "
         },
         {
           "type": "path",
           "style": "plain",
           "foreground": "#66d9ef",
-          "options": {
-            "style": "full"
-          },
+          "options": { "style": "folder" },
           "template": "in <#f92672><b>{{ .Path }}</b></> "
         },
         {
           "type": "git",
           "style": "plain",
           "foreground": "#98c379",
-          "options": {
-            "fetch_status": true
+          "properties": {
+            "fetch_status": true,
+            "branch_icon": " "
           },
-          "fetch_upstream_status": true,
-          "template": "on <#e6db74> {{ .HEAD }}</>{{ if .Working.Changed }} <#f92672>Δ{{ .Working.String }}</>{{ end }}{{ if .Staging.Changed }} <#a6e22e>+{{ .Staging.String }}</>{{ end }}{{ if .Ahead }} <#66d9ef>↑{{ .Ahead }}</>{{ end }}{{ if .Behind }} <#66d9ef>↓{{ .Behind }}</>{{ end }} "
-        },
-        {
-          "type": "python",
-          "style": "plain",
-          "foreground": "#ffeb3b",
-          "template": " {{ if .Venv }}{{ .Venv }}{{ end }} "
-        },
-        {
-          "type": "node",
-          "style": "plain",
-          "foreground": "#83cd29",
-          "template": " {{ .Full }} "
+          "template": "on <#e6db74>{{ .HEAD }}</>{{ if .Working.Changed }} <#f92672> Δ{{ .Working.Modified }}</>{{ end }}{{ if .Staging.Changed }} <#a6e22e> +{{ .Staging.Added }}</>{{ end }} "
         }
       ]
     },
@@ -61,17 +40,14 @@
           "type": "executiontime",
           "style": "plain",
           "foreground": "#fce94f",
-          "options": {
-            "threshold": 500,
-            "style": "roundrock"
-          },
-          "template": "󱎫 {{ .FormattedMs }} "
+          "options": { "threshold": 500 },
+          "template": "{{ if .FormattedMs }}󱎫 {{ .FormattedMs }} {{ end }}"
         },
         {
           "type": "sysinfo",
           "style": "plain",
           "foreground": "#83769c",
-          "template": "󰻠 {{ .Load1Min }} "
+          "template": "󰻠 {{ if .Load1 }}{{ printf \"%.2f\" .Load1 }}{{ else }}0.00{{ end }} | 󰍛 {{ printf \"%.0f\" .PhysicalPercentUsed }}% "
         },
         {
           "type": "time",
@@ -90,12 +66,8 @@
           "type": "status",
           "style": "plain",
           "foreground": "#ffffff",
-          "foreground_templates": [
-            "{{ if .Error }}#f92672{{ end }}"
-          ],
-          "options": {
-            "always_enabled": true
-          },
+          "foreground_templates": [ "{{ if .Error }}#f92672{{ end }}" ],
+          "options": { "always_enabled": true },
           "template": "╰─{{ if .Error }}✘ {{ .Code }}{{ else }}○{{ end }} ❯ "
         }
       ]
