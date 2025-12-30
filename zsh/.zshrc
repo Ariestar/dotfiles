@@ -4,6 +4,7 @@
 # ==============================================================================
 
 # --- [1. 路径与环境变量] ---
+export PATH="$HOME/.local/bin:$PATH"
 export LANG=en_US.UTF-8
 # 将 GitHub 仓库路径参数化，保证平移不变性
 export DOTFILES="$HOME/dotfiles"
