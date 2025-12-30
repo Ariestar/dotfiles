@@ -14,41 +14,70 @@
         {
           "type": "session",
           "style": "plain",
-          "foreground": "#a6e22e",
-          "template": "{{ .UserName }} "
-        },
-        {
-          "type": "text",
-          "style": "plain",
-          "foreground": "#ffffff",
-          "template": "<#75715e>at</> "
-        },
-        {
-          "type": "session",
-          "style": "plain",
-          "foreground": "#66d9ef",
-          "template": "{{ .HostName }} "
-        },
-        {
-          "type": "text",
-          "style": "plain",
-          "foreground": "#ffffff",
-          "template": "<#75715e>in</> "
+          "foreground": "#A6E22E", 
+          "foreground_templates": [
+            "{{ if .SSHSession }}#AE81FF{{ end }}"
+          ],
+          "template": "{{ .UserName }}@{{ .HostName }} "
         },
         {
           "type": "path",
           "style": "plain",
-          "foreground": "#f92672",
+          "foreground": "#66d9ef",
           "options": {
             "style": "full"
           },
-          "template": "<b>{{ .Path }}</b> "
+          "template": "in <#f92672><b>{{ .Path }}</b></> "
+        },
+        {
+          "type": "git",
+          "style": "plain",
+          "foreground": "#98c379",
+          "options": {
+            "fetch_status": true
+          },
+          "fetch_upstream_status": true,
+          "template": "on <#e6db74> {{ .HEAD }}</>{{ if .Working.Changed }} <#f92672>Δ{{ .Working.String }}</>{{ end }}{{ if .Staging.Changed }} <#a6e22e>+{{ .Staging.String }}</>{{ end }}{{ if .Ahead }} <#66d9ef>↑{{ .Ahead }}</>{{ end }}{{ if .Behind }} <#66d9ef>↓{{ .Behind }}</>{{ end }} "
+        },
+        {
+          "type": "python",
+          "style": "plain",
+          "foreground": "#ffeb3b",
+          "template": " {{ if .Venv }}{{ .Venv }}{{ end }} "
+        },
+        {
+          "type": "node",
+          "style": "plain",
+          "foreground": "#83cd29",
+          "template": " {{ .Full }} "
+        }
+      ]
+    },
+    {
+      "type": "prompt",
+      "alignment": "right",
+      "segments": [
+        {
+          "type": "executiontime",
+          "style": "plain",
+          "foreground": "#fce94f",
+          "options": {
+            "threshold": 500,
+            "style": "roundrock"
+          },
+          "template": "󱎫 {{ .FormattedMs }} "
+        },
+        {
+          "type": "sysinfo",
+          "style": "plain",
+          "foreground": "#83769c",
+          "template": "󰻠 {{ .Load1Min }} "
         },
         {
           "type": "time",
           "style": "plain",
-          "foreground": "#ffffff",
-          "template": "{{ .CurrentDate | date \"06-01-02\" }} <#75715e>-</> {{ .CurrentDate | date \"15:04:05\" }}"
+          "foreground": "#75715e",
+          "template": "{{ .CurrentDate | date \"15:04:05\" }}"
         }
       ]
     },
@@ -58,10 +87,16 @@
       "newline": true,
       "segments": [
         {
-          "type": "text",
+          "type": "status",
           "style": "plain",
           "foreground": "#ffffff",
-          "template": "╰─○ "
+          "foreground_templates": [
+            "{{ if .Error }}#f92672{{ end }}"
+          ],
+          "options": {
+            "always_enabled": true
+          },
+          "template": "╰─{{ if .Error }}✘ {{ .Code }}{{ else }}○{{ end }} ❯ "
         }
       ]
     }
