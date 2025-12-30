@@ -1,0 +1,79 @@
+# 🔧 Dotfiles
+
+跨平台终端配置文件管理仓库 (Windows & Linux/macOS)。
+通过统一的配置和工具链，在不同系统间提供一致的终端体验。
+
+## 📂 目录结构
+
+```text
+dotfiles/
+├── powershell/     # Windows PowerShell 配置与安装脚本
+├── zsh/            # Linux/macOS Zsh 配置与安装脚本
+└── posh/           # Oh My Posh 主题配置 (全平台通用)
+```
+
+## ✨ 功能特性
+
+*   **多平台统一**: 无论是在 Windows PowerShell 还是 Linux Zsh，享受一致的提示符和操作习惯。
+*   **Oh My Posh**: 集成自定义主题 (`posh/theme.omp.json`)，美观且实用。
+*   **自动化安装**: 提供开箱即用的安装脚本，自动处理软链接 (Symlink) 和备份旧配置。
+*   **常用别名**: 预设 `g` (git), `l` (ls) 等常用别名。
+*   **环境隔离**: 配置文件通过软链接指向本仓库，方便通过 Git 进行版本控制和同步。
+
+## 🚀 快速开始
+
+### 前置要求
+
+在安装配置之前，请确保已安装以下基础工具：
+
+1.  **Git**: 用于管理版本控制。
+2.  **Oh My Posh**: 终端提示符引擎。
+    *   Windows: `winget install JanDeDobbeleer.OhMyPosh -s winget`
+    *   Linux/macOS: `curl -s https://ohmyposh.dev/install.sh | bash -s`
+3.  **Nerd Fonts**: 为了正确显示图标，请安装并配置 Nerd Font，在脚本中会默认下载 Cascadia Code 字体。
+
+### 📦 安装步骤
+
+#### Windows (PowerShell)
+
+在 PowerShell 中运行安装脚本：
+
+```powershell
+# 进入仓库目录
+cd dotfiles
+
+# 运行安装脚本
+.\powershell\install.ps1
+```
+
+> **注意**: 脚本会自动将 `$PROFILE` 链接到仓库中的 `Microsoft.PowerShell_profile.ps1`，并备份原文件。如果遇到权限问题，请以管理员身份运行终端。
+
+#### Linux / macOS (Zsh)
+
+在终端中运行安装脚本：
+
+```bash
+# 进入仓库目录
+cd dotfiles
+
+# 赋予执行权限并运行
+chmod +x zsh/install.sh
+./zsh/install.sh
+```
+
+> **注意**: 脚本会将 `~/.zshrc` 链接到仓库中的 `zsh/.zshrc`，并建立 `~/dotfiles` 的软链接以确保路径一致性。
+
+### 常用别名 (Alias)
+
+| 别名 | 原命令 | 说明 |
+| :--- | :--- | :--- |
+| `g` | `git` | Git 简写 |
+| `l` | `ls` (Windows) / `ls -lah` (Linux) | 列出文件 |
+| `dot` | `cd ~/dotfiles` | 快速跳转到配置仓库 |
+
+## 🔄 更新配置
+
+当你修改了仓库中的配置文件后：
+
+*   **PowerShell**: 重启终端或运行 `. $PROFILE`
+*   **Zsh**: 重启终端或运行 `source ~/.zshrc`
