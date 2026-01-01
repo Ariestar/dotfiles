@@ -55,6 +55,7 @@ cd dotfiles
 *   **PSFzf**：模糊搜索历史/文件/进程。安装 `fzf` 后运行 `Install-Module PSFzf -Scope CurrentUser`。
 *   **zoxide**：智能目录跳转 (`z`/`zi`)。使用 `winget install ajeetdsouza.zoxide` 或 Scoop/Chocolatey 安装。
 *   **Atuin**：加密同步命令历史与模糊搜索。可通过 `winget install atuin` 或参考官方安装指引。
+*   默认环境变量 `DOTFILES_ENABLE_PSFZF=true` `DOTFILES_ENABLE_ZOXIDE=true` `DOTFILES_ENABLE_ATUIN=true` 可在 `config/dotfiles.env` 中按需设为 `false` 关闭。
 
 #### Linux / macOS (Zsh)
 
@@ -78,6 +79,7 @@ chmod +x zsh/install.sh
 *   **fzf**：模糊搜索历史、文件与补全，加速 Ctrl+R/Ctrl+T 流程。
 *   **zoxide**：智能目录跳转 (`z`/`zi`)，推荐 `curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash` 或按发行版包管理器安装。
 *   **Atuin**：加密同步命令历史并提供模糊搜索，可与 PowerShell 端共用；参考官方脚本或包管理器安装后自动生效。
+*   默认环境变量 `DOTFILES_ENABLE_ZOXIDE=true` `DOTFILES_ENABLE_ATUIN=true`（以及 `DOTFILES_ENABLE_FZF=true` 等）在 `config/dotfiles.env` 中可修改为 `false` 关闭。
 
 ### 常用别名 (Alias)
 
