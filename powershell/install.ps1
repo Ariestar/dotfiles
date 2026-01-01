@@ -8,15 +8,17 @@ Write-Host "`n📦 开始配置 PowerShell 环境...`n" -ForegroundColor Cyan
 # --- [1. 环境变量与路径定义] ---
 $RepoRoot = Resolve-Path "$PSScriptRoot\.."
 $TargetProfile = $PROFILE
-# 检查是否为 PowerShell Core (pwsh) 或 Windows PowerShell
-# 优先配置当前正在使用的宿主 (CurrentUserCurrentHost)
-# 如果 $PROFILE 路径所在的文件夹不存在，则创建
-$ProfileDir = Split-Path $TargetProfile -Parent
-if (-not (Test-Path $ProfileDir)) {
-    New-Item -ItemType Directory -Path $ProfileDir -Force | Out-Null
-}
-
 $SourceProfile = Join-Path $PSScriptRoot "Microsoft.PowerShell_profile.ps1"
+$ConfigDir = Join-Path $RepoRoot "config"
+$ConfigEnvFile = Join-Path $ConfigDir "dotfiles.env"
+
+# --- [1.1 插件开关交互] ---
+$EnablePluginsDefault = "Y"
+$EnablePlugins = Read-Host "是否启用增强插件 (PSReadLine/posh-git)? [Y/n]"
+if ([string]::IsNullOrWhiteSpace($EnablePlugins)) { $EnablePlugins = $EnablePluginsDefault }
+$EnablePlugins = $EnablePlugins.Trim().ToUpper()
+$EnablePsReadLine = $EnablePlugins
+$EnablePoshGit = $EnablePlugins
 
 # --- [2. 确保 ~/dotfiles 链接存在] ---
 # 因为配置文件中硬编码了 "$HOME/dotfiles"，我们需要建立软链
@@ -58,6 +60,35 @@ if (Test-Path $TargetProfile) {
 } else {
     New-Item -ItemType SymbolicLink -Path $TargetProfile -Target $SourceProfile -Force | Out-Null
     Write-Host "✅ 新 Profile 链接创建成功" -ForegroundColor Green
+}
+
+# --- [3.1 记录插件开关到共享配置文件] ---
+if (-not (Test-Path $ConfigDir)) {
+    New-Item -ItemType Directory -Path $ConfigDir -Force | Out-Null
+}
+
+$EnableValue = if ($EnablePlugins -eq "N") { "false" } else { "true" }
+$EnablePsReadLineValue = if ($EnablePsReadLine -eq "N") { "false" } else { "true" }
+$EnablePoshGitValue = if ($EnablePoshGit -eq "N") { "false" } else { "true" }
+Set-Content -Path $ConfigEnvFile -Value @(
+    "# Dotfiles cross-shell settings"
+    "DOTFILES_ENABLE_PLUGINS=$EnableValue"
+    "DOTFILES_ENABLE_PSREADLINE=$EnablePsReadLineValue"
+    "DOTFILES_ENABLE_POSH_GIT=$EnablePoshGitValue"
+    "DOTFILES_ENABLE_FZF=true"
+    "DOTFILES_ENABLE_ZSH_AUTOSUGGESTIONS=true"
+    "DOTFILES_ENABLE_ZSH_SYNTAX_HIGHLIGHTING=true"
+)
+
+# 同步到当前用户环境，便于立即生效
+[Environment]::SetEnvironmentVariable("DOTFILES_ENABLE_PLUGINS", $EnableValue, "User") | Out-Null
+[Environment]::SetEnvironmentVariable("DOTFILES_ENABLE_PSREADLINE", $EnablePsReadLineValue, "User") | Out-Null
+[Environment]::SetEnvironmentVariable("DOTFILES_ENABLE_POSH_GIT", $EnablePoshGitValue, "User") | Out-Null
+
+if ($EnableValue -eq "false") {
+    Write-Host "ℹ️  已禁用插件增强 (PSReadLine/posh-git)。可通过设置 DOTFILES_ENABLE_PLUGINS=1 或编辑 $ConfigEnvFile 重新启用。" -ForegroundColor Gray
+} else {
+    Write-Host "✅ 已启用插件增强 (PSReadLine/posh-git)" -ForegroundColor Green
 }
 
 # --- [4. 检查并安装依赖模块] ---

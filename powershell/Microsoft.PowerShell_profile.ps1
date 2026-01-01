@@ -4,15 +4,50 @@ $PSStyle.OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 chcp.com 65001 > $null
 
-# 1.1 交互增强：PSReadLine + posh-git（仅在已安装时启用）
-if (Get-Module -ListAvailable PSReadLine) {
-    Import-Module PSReadLine
-    Set-PSReadLineOption -PredictionSource HistoryAndPlugin
-    Set-PSReadLineOption -PredictionViewStyle InlineView
-    Set-PSReadLineOption -Colors @{ Command = '#00ff00'; Error = '#ff5555' }
+# 1.0 从共享配置文件加载开关（便于个性化扩展）
+$configPath = Join-Path $HOME "dotfiles/config/dotfiles.env"
+if (Test-Path $configPath) {
+    Get-Content $configPath | ForEach-Object {
+        if ($_ -match '^\s*#' -or $_ -match '^\s*$') { return }
+        $parts = $_ -split '=', 2
+        if ($parts.Count -eq 2) {
+            $name = $parts[0].Trim()
+            $value = $parts[1].Trim()
+            if ($name) { [Environment]::SetEnvironmentVariable($name, $value) }
+        }
+    }
 }
-if (Get-Module -ListAvailable posh-git) {
-    Import-Module posh-git
+
+# 1.1 交互增强：PSReadLine + posh-git（仅在已安装且未被禁用时启用）
+function ConvertTo-Bool([string]$value, [bool]$default=$true) {
+    if ([string]::IsNullOrWhiteSpace($value)) { return $default }
+    switch ($value.ToLower()) {
+        "true" { return $true }
+        "1"    { return $true }
+        "false" { return $false }
+        "0"     { return $false }
+        default { return $default }
+    }
+}
+
+$enablePlugins = ConvertTo-Bool $env:DOTFILES_ENABLE_PLUGINS $true
+$enablePsReadLine = ConvertTo-Bool $env:DOTFILES_ENABLE_PSREADLINE $enablePlugins
+$enablePoshGit = ConvertTo-Bool $env:DOTFILES_ENABLE_POSH_GIT $enablePlugins
+
+if ($enablePlugins) {
+    if (Get-Module -ListAvailable PSReadLine) {
+        if ($enablePsReadLine) {
+            Import-Module PSReadLine
+            Set-PSReadLineOption -PredictionSource HistoryAndPlugin
+            Set-PSReadLineOption -PredictionViewStyle InlineView
+            Set-PSReadLineOption -Colors @{ Command = '#00ff00'; Error = '#ff5555' }
+        }
+    }
+    if (Get-Module -ListAvailable posh-git) {
+        if ($enablePoshGit) {
+            Import-Module posh-git
+        }
+    }
 }
 
 # 2. 初始化 Oh My Posh

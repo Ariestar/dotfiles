@@ -23,6 +23,14 @@ REPO_ROOT="$(dirname "$SCRIPT_DIR")"
 # 目标文件
 TARGET_ZSHRC="$HOME/.zshrc"
 SOURCE_ZSHRC="$SCRIPT_DIR/.zshrc"
+ZSHENV_FILE="$HOME/.zshenv"
+CONFIG_DIR="$REPO_ROOT/config"
+CONFIG_ENV_FILE="$CONFIG_DIR/dotfiles.env"
+
+# 插件开关交互（默认启用）
+read -r -p "是否启用增强插件 (fzf/zsh-autosuggestions/zsh-syntax-highlighting)? [Y/n] " enable_plugins_input
+enable_plugins_input=${enable_plugins_input:-Y}
+enable_plugins_input=$(echo "$enable_plugins_input" | tr '[:lower:]' '[:upper:]')
 
 # --- [2. 确保 ~/dotfiles 链接存在] ---
 # 配置文件中使用了 export DOTFILES="$HOME/dotfiles"
@@ -47,6 +55,22 @@ fi
 
 ln -s "$SOURCE_ZSHRC" "$TARGET_ZSHRC"
 echo -e "${GREEN}✅ .zshrc 链接创建成功${NC}"
+
+# --- [3.1 写入插件开关到共享配置文件 config/dotfiles.env] ---
+mkdir -p "$CONFIG_DIR"
+if [ "$enable_plugins_input" = "N" ]; then
+  echo -e "# Dotfiles cross-shell settings\nDOTFILES_ENABLE_PLUGINS=false" > "$CONFIG_ENV_FILE"
+else
+  echo -e "# Dotfiles cross-shell settings\nDOTFILES_ENABLE_PLUGINS=true" > "$CONFIG_ENV_FILE"
+fi
+cat >> "$CONFIG_ENV_FILE" <<'EOF'
+DOTFILES_ENABLE_PSREADLINE=true
+DOTFILES_ENABLE_POSH_GIT=true
+DOTFILES_ENABLE_FZF=true
+DOTFILES_ENABLE_ZSH_AUTOSUGGESTIONS=true
+DOTFILES_ENABLE_ZSH_SYNTAX_HIGHLIGHTING=true
+EOF
+echo -e "${GREEN}✅ 插件开关已写入 $CONFIG_ENV_FILE (DOTFILES_ENABLE_PLUGINS=$( [ \"$enable_plugins_input\" = \"N\" ] && echo false || echo true ))${NC}"
 
 # --- [4. 检查依赖] ---
 echo -e "\n${YELLOW}📦 检查依赖工具...${NC}"
