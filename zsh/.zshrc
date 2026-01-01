@@ -94,17 +94,29 @@ if [ "$DOTFILES_ENABLE_FZF" != "false" ] && command -v fzf &> /dev/null; then
 fi
 
 # 自动建议 (zsh-autosuggestions)
-if [ "$DOTFILES_ENABLE_ZSH_AUTOSUGGESTIONS" != "false" ] && [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-  source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-elif [ "$DOTFILES_ENABLE_ZSH_AUTOSUGGESTIONS" != "false" ] && [ -f $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-  source $HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+if [ "$DOTFILES_ENABLE_ZSH_AUTOSUGGESTIONS" != "false" ]; then
+  for _zf in \
+    /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+    "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
+  do
+    if [ -f "$_zf" ]; then
+      source "$_zf"
+      break
+    fi
+  done
 fi
 
 # 语法高亮 (zsh-syntax-highlighting)
-if [ "$DOTFILES_ENABLE_ZSH_SYNTAX_HIGHLIGHTING" != "false" ] && [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-elif [ "$DOTFILES_ENABLE_ZSH_SYNTAX_HIGHLIGHTING" != "false" ] && [ -f $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-  source $HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if [ "$DOTFILES_ENABLE_ZSH_SYNTAX_HIGHLIGHTING" != "false" ]; then
+  for _zh in \
+    /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+    "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+  do
+    if [ -f "$_zh" ]; then
+      source "$_zh"
+      break
+    fi
+  done
 fi
 
 fi
