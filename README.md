@@ -48,6 +48,15 @@ cd dotfiles
 
 > **注意**: 脚本会自动将 `$PROFILE` 链接到仓库中的 `Microsoft.PowerShell_profile.ps1`，并备份原文件。如果遇到权限问题，请以管理员身份运行终端。
 
+#### PowerShell 可选增强
+
+在 PowerShell 中已预置以下增强插件的配置开关，安装后即会自动启用：
+
+*   **PSFzf**：模糊搜索历史/文件/进程。安装 `fzf` 后运行 `Install-Module PSFzf -Scope CurrentUser`。
+*   **zoxide**：智能目录跳转 (`z`/`zi`)。使用 `winget install ajeetdsouza.zoxide` 或 Scoop/Chocolatey 安装。
+*   **Atuin**：加密同步命令历史与模糊搜索。可通过 `winget install atuin` 或参考官方安装指引。
+*   默认环境变量 `DOTFILES_ENABLE_PSFZF=true` `DOTFILES_ENABLE_ZOXIDE=true` `DOTFILES_ENABLE_ATUIN=true` 可在 `config/dotfiles.env` 中按需设为 `false` 关闭。
+
 #### Linux / macOS (Zsh)
 
 在终端中运行安装脚本：
@@ -62,6 +71,15 @@ chmod +x zsh/install.sh
 ```
 
 > **注意**: 脚本会将 `~/.zshrc` 链接到仓库中的 `zsh/.zshrc`，并建立 `~/dotfiles` 的软链接以确保路径一致性。
+
+#### Zsh 可选增强
+
+在 Zsh 配置中也预置了以下增强插件的开关，安装后会自动启用：
+
+*   **fzf**：模糊搜索历史、文件与补全，加速 Ctrl+R/Ctrl+T 流程。
+*   **zoxide**：智能目录跳转 (`z`/`zi`)，推荐 `curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash` 或按发行版包管理器安装。
+*   **Atuin**：加密同步命令历史并提供模糊搜索，可与 PowerShell 端共用；参考官方脚本或包管理器安装后自动生效。
+*   默认环境变量 `DOTFILES_ENABLE_ZOXIDE=true` `DOTFILES_ENABLE_ATUIN=true`（以及 `DOTFILES_ENABLE_FZF=true` 等）在 `config/dotfiles.env` 中可修改为 `false` 关闭。
 
 ### 常用别名 (Alias)
 
