@@ -14,7 +14,12 @@ $ConfigEnvFile = Join-Path $ConfigDir "dotfiles.env"
 
 # --- [1.1 插件开关交互] ---
 $EnablePluginsDefault = "Y"
-$EnablePlugins = Read-Host "是否启用增强插件 (PSReadLine/posh-git)? [Y/n]"
+$EnablePlugins = $null
+try {
+    $EnablePlugins = Read-Host "是否启用增强插件 (PSReadLine/posh-git)? [Y/n]"
+} catch {
+    $EnablePlugins = $EnablePluginsDefault
+}
 if ([string]::IsNullOrWhiteSpace($EnablePlugins)) { $EnablePlugins = $EnablePluginsDefault }
 $EnablePlugins = $EnablePlugins.Trim().ToUpper()
 $EnablePsReadLine = $EnablePlugins
@@ -70,21 +75,50 @@ if (-not (Test-Path $ConfigDir)) {
 $EnableValue = if ($EnablePlugins -eq "N") { "false" } else { "true" }
 $EnablePsReadLineValue = if ($EnablePsReadLine -eq "N") { "false" } else { "true" }
 $EnablePoshGitValue = if ($EnablePoshGit -eq "N") { "false" } else { "true" }
-$EnablePsfzfValue = if ($EnablePlugins -eq "N") { "false" } else { "true" }
-$EnableZoxideValue = if ($EnablePlugins -eq "N") { "false" } else { "true" }
-$EnableAtuinValue = if ($EnablePlugins -eq "N") { "false" } else { "true" }
-Set-Content -Path $ConfigEnvFile -Value @(
-    "# Dotfiles cross-shell settings"
-    "DOTFILES_ENABLE_PLUGINS=$EnableValue"
-    "DOTFILES_ENABLE_PSREADLINE=$EnablePsReadLineValue"
-    "DOTFILES_ENABLE_POSH_GIT=$EnablePoshGitValue"
-    "DOTFILES_ENABLE_PSFZF=$EnablePsfzfValue"
-    "DOTFILES_ENABLE_ZOXIDE=$EnableZoxideValue"
-    "DOTFILES_ENABLE_ATUIN=$EnableAtuinValue"
-    "DOTFILES_ENABLE_FZF=true"
-    "DOTFILES_ENABLE_ZSH_AUTOSUGGESTIONS=true"
-    "DOTFILES_ENABLE_ZSH_SYNTAX_HIGHLIGHTING=true"
-)
+
+function Ensure-EnvFileHeader([string]$Path) {
+    if (-not (Test-Path $Path)) {
+        Set-Content -Path $Path -Value @("# Dotfiles cross-shell settings") -Encoding UTF8
+        return
+    }
+    $existing = Get-Content -Path $Path -ErrorAction SilentlyContinue
+    if ($null -eq $existing -or $existing.Count -eq 0) {
+        Set-Content -Path $Path -Value @("# Dotfiles cross-shell settings") -Encoding UTF8
+    }
+}
+
+function Set-EnvFileValue([string]$Path, [string]$Name, [string]$Value) {
+    Ensure-EnvFileHeader $Path
+    $lines = Get-Content -Path $Path -ErrorAction SilentlyContinue
+    $pattern = '^\s*' + [Regex]::Escape($Name) + '\s*='
+    $updated = $false
+    $newLines = foreach ($line in $lines) {
+        if ($line -match '^\s*#') { $line; continue }
+        if ($line -match $pattern) { $updated = $true; "$Name=$Value"; continue }
+        $line
+    }
+    if (-not $updated) { $newLines += "$Name=$Value" }
+    Set-Content -Path $Path -Value $newLines -Encoding UTF8
+}
+
+function Ensure-EnvFileValue([string]$Path, [string]$Name, [string]$Value) {
+    Ensure-EnvFileHeader $Path
+    $lines = Get-Content -Path $Path -ErrorAction SilentlyContinue
+    $pattern = '^\s*' + [Regex]::Escape($Name) + '\s*='
+    foreach ($line in $lines) {
+        if ($line -match '^\s*#') { continue }
+        if ($line -match $pattern) { return }
+    }
+    Add-Content -Path $Path -Value "$Name=$Value" -Encoding UTF8
+}
+
+Set-EnvFileValue $ConfigEnvFile "DOTFILES_ENABLE_PLUGINS" $EnableValue
+Set-EnvFileValue $ConfigEnvFile "DOTFILES_ENABLE_PSREADLINE" $EnablePsReadLineValue
+Set-EnvFileValue $ConfigEnvFile "DOTFILES_ENABLE_POSH_GIT" $EnablePoshGitValue
+
+Ensure-EnvFileValue $ConfigEnvFile "DOTFILES_ENABLE_FZF" "true"
+Ensure-EnvFileValue $ConfigEnvFile "DOTFILES_ENABLE_ZSH_AUTOSUGGESTIONS" "true"
+Ensure-EnvFileValue $ConfigEnvFile "DOTFILES_ENABLE_ZSH_SYNTAX_HIGHLIGHTING" "true"
 
 # 同步到当前用户环境，便于立即生效
 [Environment]::SetEnvironmentVariable("DOTFILES_ENABLE_PLUGINS", $EnableValue, "User") | Out-Null
