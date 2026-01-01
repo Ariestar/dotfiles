@@ -1,5 +1,19 @@
-# 1. 设置 UTF-8 编码，防止中文乱码
+# 1. 设置 UTF-8 编码，防止中文乱码（覆盖控制台/样式/外部进程）
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$PSStyle.OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
+chcp.com 65001 > $null
+
+# 1.1 交互增强：PSReadLine + posh-git（仅在已安装时启用）
+if (Get-Module -ListAvailable PSReadLine) {
+    Import-Module PSReadLine
+    Set-PSReadLineOption -PredictionSource HistoryAndPlugin
+    Set-PSReadLineOption -PredictionViewStyle InlineView
+    Set-PSReadLineOption -Colors @{ Command = '#00ff00'; Error = '#ff5555' }
+}
+if (Get-Module -ListAvailable posh-git) {
+    Import-Module posh-git
+}
 
 # 2. 初始化 Oh My Posh
 # 注意：使用 $HOME 变量确保跨机兼容性
