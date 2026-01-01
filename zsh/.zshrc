@@ -25,6 +25,20 @@ _dotfiles_bool() {
   esac
 }
 
+# 通用：从候选路径中加载首个存在的插件脚本
+_dotfiles_source_first() {
+  local enabled="$1" name="$2"
+  shift 2
+  [ "$enabled" = "false" ] && return
+  for _candidate in "$@"; do
+    if [ -f "$_candidate" ]; then
+      source "$_candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
 # --- [2. 历史记录管理] ---
 HISTSIZE=1000
 SAVEHIST=1000
@@ -81,43 +95,23 @@ if [ "$DOTFILES_ENABLE_PLUGINS" != "false" ]; then
 # fzf 补全与快捷键
 if [ "$DOTFILES_ENABLE_FZF" != "false" ] && command -v fzf &> /dev/null; then
   # 常见发行版的安装路径，找到就加载
-  if [ -f /usr/share/doc/fzf/examples/key-bindings.zsh ]; then
-    source /usr/share/doc/fzf/examples/key-bindings.zsh
-  elif [ -f /usr/share/fzf/key-bindings.zsh ]; then
-    source /usr/share/fzf/key-bindings.zsh
-  fi
-  if [ -f /usr/share/doc/fzf/examples/completion.zsh ]; then
-    source /usr/share/doc/fzf/examples/completion.zsh
-  elif [ -f /usr/share/fzf/completion.zsh ]; then
-    source /usr/share/fzf/completion.zsh
-  fi
+  _dotfiles_source_first "$DOTFILES_ENABLE_FZF" "fzf key-bindings" \
+    /usr/share/doc/fzf/examples/key-bindings.zsh \
+    /usr/share/fzf/key-bindings.zsh
+  _dotfiles_source_first "$DOTFILES_ENABLE_FZF" "fzf completion" \
+    /usr/share/doc/fzf/examples/completion.zsh \
+    /usr/share/fzf/completion.zsh
 fi
 
 # 自动建议 (zsh-autosuggestions)
-if [ "$DOTFILES_ENABLE_ZSH_AUTOSUGGESTIONS" != "false" ]; then
-  for _zf in \
-    /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
-    "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
-  do
-    if [ -f "$_zf" ]; then
-      source "$_zf"
-      break
-    fi
-  done
-fi
+_dotfiles_source_first "$DOTFILES_ENABLE_ZSH_AUTOSUGGESTIONS" "zsh-autosuggestions" \
+  /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+  "$HOME/.oh-my-zsh/custom/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 # 语法高亮 (zsh-syntax-highlighting)
-if [ "$DOTFILES_ENABLE_ZSH_SYNTAX_HIGHLIGHTING" != "false" ]; then
-  for _zh in \
-    /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
-    "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-  do
-    if [ -f "$_zh" ]; then
-      source "$_zh"
-      break
-    fi
-  done
-fi
+_dotfiles_source_first "$DOTFILES_ENABLE_ZSH_SYNTAX_HIGHLIGHTING" "zsh-syntax-highlighting" \
+  /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+  "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
 fi
 
