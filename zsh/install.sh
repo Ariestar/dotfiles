@@ -15,6 +15,42 @@ NC='\033[0m' # No Color
 
 echo -e "${CYAN}📦 开始配置 Zsh 环境...${NC}\n"
 
+# env 文件 key=value 的更新/补齐（尽量保留用户已有内容）
+upsert_env_kv() {
+  local file="$1" key="$2" value="$3"
+  mkdir -p "$(dirname "$file")"
+  if [ -f "$file" ]; then
+    if grep -Eq "^[[:space:]]*${key}[[:space:]]*=" "$file"; then
+      local tmp
+      tmp="$(mktemp)"
+      awk -v k="$key" -v v="$value" '
+        BEGIN{re="^[ \t]*"k"[ \t]*="}
+        $0 ~ /^[ \t]*#/ {print; next}
+        $0 ~ re {print k"="v; next}
+        {print}
+      ' "$file" > "$tmp"
+      mv "$tmp" "$file"
+      return 0
+    fi
+  fi
+  if [ ! -f "$file" ] || [ ! -s "$file" ]; then
+    printf '%s\n' '# Dotfiles cross-shell settings' > "$file"
+  fi
+  printf '%s=%s\n' "$key" "$value" >> "$file"
+}
+
+ensure_env_kv() {
+  local file="$1" key="$2" value="$3"
+  mkdir -p "$(dirname "$file")"
+  if [ -f "$file" ] && grep -Eq "^[[:space:]]*${key}[[:space:]]*=" "$file"; then
+    return 0
+  fi
+  if [ ! -f "$file" ] || [ ! -s "$file" ]; then
+    printf '%s\n' '# Dotfiles cross-shell settings' > "$file"
+  fi
+  printf '%s=%s\n' "$key" "$value" >> "$file"
+}
+
 # --- [1. 路径定义] ---
 # 获取脚本所在目录的上一级目录 (即仓库根目录)
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -57,19 +93,16 @@ ln -s "$SOURCE_ZSHRC" "$TARGET_ZSHRC"
 echo -e "${GREEN}✅ .zshrc 链接创建成功${NC}"
 
 # --- [3.1 写入插件开关到共享配置文件 config/dotfiles.env] ---
-mkdir -p "$CONFIG_DIR"
 if [ "$enable_plugins_input" = "N" ]; then
-  echo -e "# Dotfiles cross-shell settings\nDOTFILES_ENABLE_PLUGINS=false" > "$CONFIG_ENV_FILE"
+  upsert_env_kv "$CONFIG_ENV_FILE" "DOTFILES_ENABLE_PLUGINS" "false"
 else
-  echo -e "# Dotfiles cross-shell settings\nDOTFILES_ENABLE_PLUGINS=true" > "$CONFIG_ENV_FILE"
+  upsert_env_kv "$CONFIG_ENV_FILE" "DOTFILES_ENABLE_PLUGINS" "true"
 fi
-cat >> "$CONFIG_ENV_FILE" <<'EOF'
-DOTFILES_ENABLE_PSREADLINE=true
-DOTFILES_ENABLE_POSH_GIT=true
-DOTFILES_ENABLE_FZF=true
-DOTFILES_ENABLE_ZSH_AUTOSUGGESTIONS=true
-DOTFILES_ENABLE_ZSH_SYNTAX_HIGHLIGHTING=true
-EOF
+ensure_env_kv "$CONFIG_ENV_FILE" "DOTFILES_ENABLE_PSREADLINE" "true"
+ensure_env_kv "$CONFIG_ENV_FILE" "DOTFILES_ENABLE_POSH_GIT" "true"
+ensure_env_kv "$CONFIG_ENV_FILE" "DOTFILES_ENABLE_FZF" "true"
+ensure_env_kv "$CONFIG_ENV_FILE" "DOTFILES_ENABLE_ZSH_AUTOSUGGESTIONS" "true"
+ensure_env_kv "$CONFIG_ENV_FILE" "DOTFILES_ENABLE_ZSH_SYNTAX_HIGHLIGHTING" "true"
 echo -e "${GREEN}✅ 插件开关已写入 $CONFIG_ENV_FILE (DOTFILES_ENABLE_PLUGINS=$( [ \"$enable_plugins_input\" = \"N\" ] && echo false || echo true ))${NC}"
 
 # --- [4. 检查依赖] ---
@@ -99,28 +132,29 @@ GITHUB_FONT_URL="https://github.com/ryanoasis/nerd-fonts/releases/latest/downloa
 # 确保路径存在
 mkdir -p "$FONT_DIR"
 
-if ! fc-list | grep -qi "Caskaydia"; then
-    echo -e "${YELLOW}📥 正在从 GitHub 下载 ${FONT_NAME}...${NC}"
-    
-    # 创建临时目录
-    TEMP_DIR=$(mktemp -d)
-    
-    # 使用 -L 跟随重定向，下载压缩包
-    curl -fLo "$TEMP_DIR/font.zip" "$GITHUB_FONT_URL"
-    
-    # 解压字体文件 (只提取 .ttf 或 .otf)
-    unzip -q "$TEMP_DIR/font.zip" -d "$TEMP_DIR"
-    cp "$TEMP_DIR/"*Regular*.ttf "$FONT_DIR/"
-    
-    # 刷新字体缓存
-    fc-cache -f -v
-    
-    # 清理现场
-    rm -rf "$TEMP_DIR"
-    
-    echo -e "${GREEN}✅ ${FONT_NAME} 安装完成${NC}"
-else
+if command -v fc-list &> /dev/null && fc-list | grep -qi "Caskaydia"; then
     echo -e "${GREEN}✅ 检测到 ${FONT_NAME} 字体已存在${NC}"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    echo -e "${YELLOW}ℹ️  macOS 环境跳过自动安装字体（建议手动安装 Nerd Font）${NC}"
+elif ! command -v curl &> /dev/null; then
+    echo -e "${YELLOW}ℹ️  未检测到 curl，跳过自动安装字体${NC}"
+elif ! command -v unzip &> /dev/null; then
+    echo -e "${YELLOW}ℹ️  未检测到 unzip，跳过自动安装字体${NC}"
+else
+    echo -e "${YELLOW}📥 正在从 GitHub 下载 ${FONT_NAME}...${NC}"
+    TEMP_DIR=$(mktemp -d)
+    curl -fLo "$TEMP_DIR/font.zip" "$GITHUB_FONT_URL"
+    unzip -q "$TEMP_DIR/font.zip" -d "$TEMP_DIR"
+    if find "$TEMP_DIR" -maxdepth 2 -type f -name "*Regular*.ttf" -print -quit | grep -q .; then
+      find "$TEMP_DIR" -maxdepth 2 -type f -name "*Regular*.ttf" -exec cp {} "$FONT_DIR/" \;
+    else
+      find "$TEMP_DIR" -maxdepth 2 -type f -name "*.ttf" -exec cp {} "$FONT_DIR/" \;
+    fi
+    if command -v fc-cache &> /dev/null; then
+      fc-cache -f &> /dev/null || true
+    fi
+    rm -rf "$TEMP_DIR"
+    echo -e "${GREEN}✅ ${FONT_NAME} 安装完成${NC}"
 fi
 
 # --- [5. 登录 Shell 自动切换] ---

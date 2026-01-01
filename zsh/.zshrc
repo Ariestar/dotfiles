@@ -56,8 +56,10 @@ zstyle ':completion:*' matcher-list '' 'm:{a-z}={A-Z}' 'm:{a-zA-Z}={A-Za-z}' 'r:
 zstyle ':completion:*' verbose true
 
 # 颜色设置：利用 dircolors 确保 ls 颜色一致
-eval "$(dircolors -b)"
-zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+if command -v dircolors &> /dev/null; then
+  eval "$(dircolors -b)"
+  zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+fi
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
@@ -84,11 +86,15 @@ bindkey '^[[F' end-of-line
 : ${DOTFILES_ENABLE_FZF:=$DOTFILES_ENABLE_PLUGINS}
 : ${DOTFILES_ENABLE_ZSH_AUTOSUGGESTIONS:=$DOTFILES_ENABLE_PLUGINS}
 : ${DOTFILES_ENABLE_ZSH_SYNTAX_HIGHLIGHTING:=$DOTFILES_ENABLE_PLUGINS}
+: ${DOTFILES_ENABLE_ZOXIDE:=$DOTFILES_ENABLE_PLUGINS}
+: ${DOTFILES_ENABLE_ATUIN:=$DOTFILES_ENABLE_PLUGINS}
 
 DOTFILES_ENABLE_PLUGINS=$(_dotfiles_bool "$DOTFILES_ENABLE_PLUGINS")
 DOTFILES_ENABLE_FZF=$(_dotfiles_bool "$DOTFILES_ENABLE_FZF")
 DOTFILES_ENABLE_ZSH_AUTOSUGGESTIONS=$(_dotfiles_bool "$DOTFILES_ENABLE_ZSH_AUTOSUGGESTIONS")
 DOTFILES_ENABLE_ZSH_SYNTAX_HIGHLIGHTING=$(_dotfiles_bool "$DOTFILES_ENABLE_ZSH_SYNTAX_HIGHLIGHTING")
+DOTFILES_ENABLE_ZOXIDE=$(_dotfiles_bool "$DOTFILES_ENABLE_ZOXIDE")
+DOTFILES_ENABLE_ATUIN=$(_dotfiles_bool "$DOTFILES_ENABLE_ATUIN")
 
 if [ "$DOTFILES_ENABLE_PLUGINS" != "false" ]; then
 
@@ -112,6 +118,14 @@ _dotfiles_source_first "$DOTFILES_ENABLE_ZSH_AUTOSUGGESTIONS" "zsh-autosuggestio
 _dotfiles_source_first "$DOTFILES_ENABLE_ZSH_SYNTAX_HIGHLIGHTING" "zsh-syntax-highlighting" \
   /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
   "$HOME/.oh-my-zsh/custom/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+
+if [ "$DOTFILES_ENABLE_ZOXIDE" != "false" ] && command -v zoxide &> /dev/null; then
+  eval "$(zoxide init zsh)"
+fi
+
+if [ "$DOTFILES_ENABLE_ATUIN" != "false" ] && command -v atuin &> /dev/null; then
+  eval "$(atuin init zsh --disable-up-arrow)"
+fi
 
 fi
 
