@@ -124,6 +124,9 @@ Ensure-EnvFileValue $ConfigEnvFile "DOTFILES_ENABLE_ZSH_SYNTAX_HIGHLIGHTING" "tr
 [Environment]::SetEnvironmentVariable("DOTFILES_ENABLE_PLUGINS", $EnableValue, "User") | Out-Null
 [Environment]::SetEnvironmentVariable("DOTFILES_ENABLE_PSREADLINE", $EnablePsReadLineValue, "User") | Out-Null
 [Environment]::SetEnvironmentVariable("DOTFILES_ENABLE_POSH_GIT", $EnablePoshGitValue, "User") | Out-Null
+[Environment]::SetEnvironmentVariable("DOTFILES_ENABLE_PSFZF", $EnablePsfzfValue, "User") | Out-Null
+[Environment]::SetEnvironmentVariable("DOTFILES_ENABLE_ZOXIDE", $EnableZoxideValue, "User") | Out-Null
+[Environment]::SetEnvironmentVariable("DOTFILES_ENABLE_ATUIN", $EnableAtuinValue, "User") | Out-Null
 
 if ($EnableValue -eq "false") {
     Write-Host "ℹ️  已禁用插件增强 (PSReadLine/posh-git)。可通过设置 DOTFILES_ENABLE_PLUGINS=1 或编辑 $ConfigEnvFile 重新启用。" -ForegroundColor Gray
