@@ -1,5 +1,8 @@
-# 1. 设置 UTF-8 编码，防止中文乱码
+# 1. 设置 UTF-8 编码，防止中文乱码（覆盖控制台/样式/外部进程）
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$PSStyle.OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
+chcp.com 65001 > $null
 
 # 2. 初始化 Oh My Posh
 # 注意：使用 $HOME 变量确保跨机兼容性
