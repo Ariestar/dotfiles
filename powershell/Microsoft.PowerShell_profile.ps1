@@ -4,6 +4,17 @@ $PSStyle.OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 chcp.com 65001 > $null
 
+# 1.1 交互增强：PSReadLine + posh-git（仅在已安装时启用）
+if (Get-Module -ListAvailable PSReadLine) {
+    Import-Module PSReadLine
+    Set-PSReadLineOption -PredictionSource HistoryAndPlugin
+    Set-PSReadLineOption -PredictionViewStyle InlineView
+    Set-PSReadLineOption -Colors @{ Command = '#00ff00'; Error = '#ff5555' }
+}
+if (Get-Module -ListAvailable posh-git) {
+    Import-Module posh-git
+}
+
 # 2. 初始化 Oh My Posh
 # 注意：使用 $HOME 变量确保跨机兼容性
 oh-my-posh init pwsh --config "$HOME/dotfiles/posh/theme.omp.json" | Invoke-Expression
