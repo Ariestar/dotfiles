@@ -58,8 +58,12 @@ bindkey '^[[F' end-of-line
 # --- [5.1 插件生态 (按需加载，已安装则启用)] ---
 # 可通过环境变量控制开关：DOTFILES_ENABLE_PLUGINS=false 时跳过
 : ${DOTFILES_ENABLE_PLUGINS:=true}
-if [ "$DOTFILES_ENABLE_PLUGINS" = "1" ]; then DOTFILES_ENABLE_PLUGINS=true; fi
-if [ "$DOTFILES_ENABLE_PLUGINS" = "0" ]; then DOTFILES_ENABLE_PLUGINS=false; fi
+case "$DOTFILES_ENABLE_PLUGINS" in
+  1) DOTFILES_ENABLE_PLUGINS=true ;;
+  0) DOTFILES_ENABLE_PLUGINS=false ;;
+  true|false) ;;
+  *) DOTFILES_ENABLE_PLUGINS=true ;;
+esac
 if [ "$DOTFILES_ENABLE_PLUGINS" != "false" ]; then
 
 # fzf 补全与快捷键
