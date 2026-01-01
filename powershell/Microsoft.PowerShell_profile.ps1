@@ -1,5 +1,41 @@
-# 1. 设置 UTF-8 编码，防止中文乱码
+# 1. 设置 UTF-8 编码，防止中文乱码（覆盖控制台/样式/外部进程）
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$PSStyle.OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
+chcp.com 65001 > $null
+
+# 1.0 从共享配置文件加载开关（便于个性化扩展）
+$configPath = Join-Path $HOME "dotfiles/config/dotfiles.env"
+if (Test-Path $configPath) {
+    Get-Content $configPath | ForEach-Object {
+        if ($_ -match '^\s*#' -or $_ -match '^\s*$') { return }
+        $parts = $_ -split '=', 2
+        if ($parts.Count -eq 2) {
+            $name = $parts[0].Trim()
+            $value = $parts[1].Trim()
+            if ($name) { [Environment]::SetEnvironmentVariable($name, $value) }
+        }
+    }
+}
+
+# 1.1 交互增强：PSReadLine + posh-git（仅在已安装且未被禁用时启用）
+$enablePlugins = $env:DOTFILES_ENABLE_PLUGINS
+if ([string]::IsNullOrWhiteSpace($enablePlugins)) { $enablePlugins = "true" }
+$enablePlugins = $enablePlugins.ToLower()
+if ($enablePlugins -eq "1") { $enablePlugins = "true" }
+elseif ($enablePlugins -eq "0") { $enablePlugins = "false" }
+
+if ($enablePlugins -ne "false") {
+    if (Get-Module -ListAvailable PSReadLine) {
+        Import-Module PSReadLine
+        Set-PSReadLineOption -PredictionSource HistoryAndPlugin
+        Set-PSReadLineOption -PredictionViewStyle InlineView
+        Set-PSReadLineOption -Colors @{ Command = '#00ff00'; Error = '#ff5555' }
+    }
+    if (Get-Module -ListAvailable posh-git) {
+        Import-Module posh-git
+    }
+}
 
 # 2. 初始化 Oh My Posh
 # 注意：使用 $HOME 变量确保跨机兼容性
