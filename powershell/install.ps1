@@ -70,11 +70,17 @@ if (-not (Test-Path $ConfigDir)) {
 $EnableValue = if ($EnablePlugins -eq "N") { "false" } else { "true" }
 $EnablePsReadLineValue = if ($EnablePsReadLine -eq "N") { "false" } else { "true" }
 $EnablePoshGitValue = if ($EnablePoshGit -eq "N") { "false" } else { "true" }
+$EnablePsfzfValue = if ($EnablePlugins -eq "N") { "false" } else { "true" }
+$EnableZoxideValue = if ($EnablePlugins -eq "N") { "false" } else { "true" }
+$EnableAtuinValue = if ($EnablePlugins -eq "N") { "false" } else { "true" }
 Set-Content -Path $ConfigEnvFile -Value @(
     "# Dotfiles cross-shell settings"
     "DOTFILES_ENABLE_PLUGINS=$EnableValue"
     "DOTFILES_ENABLE_PSREADLINE=$EnablePsReadLineValue"
     "DOTFILES_ENABLE_POSH_GIT=$EnablePoshGitValue"
+    "DOTFILES_ENABLE_PSFZF=$EnablePsfzfValue"
+    "DOTFILES_ENABLE_ZOXIDE=$EnableZoxideValue"
+    "DOTFILES_ENABLE_ATUIN=$EnableAtuinValue"
     "DOTFILES_ENABLE_FZF=true"
     "DOTFILES_ENABLE_ZSH_AUTOSUGGESTIONS=true"
     "DOTFILES_ENABLE_ZSH_SYNTAX_HIGHLIGHTING=true"
@@ -84,6 +90,9 @@ Set-Content -Path $ConfigEnvFile -Value @(
 [Environment]::SetEnvironmentVariable("DOTFILES_ENABLE_PLUGINS", $EnableValue, "User") | Out-Null
 [Environment]::SetEnvironmentVariable("DOTFILES_ENABLE_PSREADLINE", $EnablePsReadLineValue, "User") | Out-Null
 [Environment]::SetEnvironmentVariable("DOTFILES_ENABLE_POSH_GIT", $EnablePoshGitValue, "User") | Out-Null
+[Environment]::SetEnvironmentVariable("DOTFILES_ENABLE_PSFZF", $EnablePsfzfValue, "User") | Out-Null
+[Environment]::SetEnvironmentVariable("DOTFILES_ENABLE_ZOXIDE", $EnableZoxideValue, "User") | Out-Null
+[Environment]::SetEnvironmentVariable("DOTFILES_ENABLE_ATUIN", $EnableAtuinValue, "User") | Out-Null
 
 if ($EnableValue -eq "false") {
     Write-Host "ℹ️  已禁用插件增强 (PSReadLine/posh-git)。可通过设置 DOTFILES_ENABLE_PLUGINS=1 或编辑 $ConfigEnvFile 重新启用。" -ForegroundColor Gray
