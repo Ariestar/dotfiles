@@ -1,8 +1,9 @@
 # 1. 设置 UTF-8 编码，防止中文乱码（覆盖控制台/样式/外部进程）
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-$PSStyle.OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
-chcp.com 65001 > $null
+if ($IsWindows) {
+    chcp.com 65001 > $null
+}
 
 # 1.0 从共享配置文件加载开关（便于个性化扩展）
 $configPath = Join-Path $HOME "dotfiles/config/dotfiles.env"
@@ -52,7 +53,9 @@ if ($enablePlugins) {
 
 # 2. 初始化 Oh My Posh
 # 注意：使用 $HOME 变量确保跨机兼容性
-oh-my-posh init pwsh --config "$HOME/dotfiles/posh/theme.omp.json" | Invoke-Expression
+if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
+    oh-my-posh init pwsh --config "$HOME/dotfiles/posh/theme.omp.json" | Invoke-Expression
+}
 
 # 3. 加载图标模块 (需提前 Install-Module Terminal-Icons)
 if (Get-Module -ListAvailable Terminal-Icons) {
