@@ -33,6 +33,9 @@ function ConvertTo-Bool([string]$value, [bool]$default=$true) {
 $enablePlugins = ConvertTo-Bool $env:DOTFILES_ENABLE_PLUGINS $true
 $enablePsReadLine = ConvertTo-Bool $env:DOTFILES_ENABLE_PSREADLINE $enablePlugins
 $enablePoshGit = ConvertTo-Bool $env:DOTFILES_ENABLE_POSH_GIT $enablePlugins
+$enablePsfzf = ConvertTo-Bool $env:DOTFILES_ENABLE_PSFZF $enablePlugins
+$enableZoxide = ConvertTo-Bool $env:DOTFILES_ENABLE_ZOXIDE $enablePlugins
+$enableAtuin = ConvertTo-Bool $env:DOTFILES_ENABLE_ATUIN $enablePlugins
 
 if ($enablePlugins) {
     if (Get-Module -ListAvailable PSReadLine) {
@@ -46,6 +49,22 @@ if ($enablePlugins) {
     if (Get-Module -ListAvailable posh-git) {
         if ($enablePoshGit) {
             Import-Module posh-git
+        }
+    }
+    if (Get-Module -ListAvailable PSFzf) {
+        if ($enablePsfzf) {
+            Import-Module PSFzf
+            Set-PsFzfOption -EnableAll
+        }
+    }
+    if (Get-Command zoxide -ErrorAction SilentlyContinue) {
+        if ($enableZoxide) {
+            Invoke-Expression (& { (zoxide init powershell | Out-String) })
+        }
+    }
+    if (Get-Command atuin -ErrorAction SilentlyContinue) {
+        if ($enableAtuin) {
+            atuin init powershell | Invoke-Expression
         }
     }
 }
