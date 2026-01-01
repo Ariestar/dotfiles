@@ -16,11 +16,11 @@ if [ -f "$DOTFILES/config/dotfiles.env" ]; then
   set +a
 fi
 
-# 布尔归一化（兼容 1/0/true/false，默认 true）
+# 布尔归一化（仅接受 true/false，默认 true）
 _dotfiles_bool() {
   case "$1" in
-    1|true|TRUE|True) echo true ;;
-    0|false|FALSE|False) echo false ;;
+    true|TRUE|True) echo true ;;
+    false|FALSE|False) echo false ;;
     *) echo true ;;
   esac
 }
