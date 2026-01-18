@@ -7,8 +7,34 @@ Write-Host "`n📦 开始配置 PowerShell 环境...`n" -ForegroundColor Cyan
 
 # --- [1. 环境变量与路径定义] ---
 $RepoRoot = Resolve-Path "$PSScriptRoot\.."
-$TargetProfile = $PROFILE
+$DefaultProfile = $PROFILE
 $SourceProfile = Join-Path $PSScriptRoot "Microsoft.PowerShell_profile.ps1"
+
+# --- [1.0 安装路径交互] ---
+Write-Host "📂 Profile 安装路径配置" -ForegroundColor Yellow
+Write-Host "   PowerShell 位置: $PSHome" -ForegroundColor Gray
+Write-Host "   默认 Profile:    $DefaultProfile" -ForegroundColor Gray
+$CustomPath = $null
+try {
+    $CustomPath = Read-Host "   输入自定义路径 (直接回车使用默认)"
+} catch {
+    $CustomPath = ""
+}
+
+if ([string]::IsNullOrWhiteSpace($CustomPath)) {
+    $TargetProfile = $DefaultProfile
+    Write-Host "   ✅ 使用默认路径" -ForegroundColor Green
+} else {
+    $TargetProfile = $CustomPath.Trim()
+    # 确保父目录存在
+    $ParentDir = Split-Path $TargetProfile -Parent
+    if (-not [string]::IsNullOrWhiteSpace($ParentDir) -and -not (Test-Path $ParentDir)) {
+        Write-Host "   📁 创建目录: $ParentDir" -ForegroundColor Gray
+        New-Item -ItemType Directory -Path $ParentDir -Force | Out-Null
+    }
+    Write-Host "   ✅ 使用自定义路径: $TargetProfile" -ForegroundColor Green
+}
+Write-Host ""
 $ConfigDir = Join-Path $RepoRoot "config"
 $ConfigEnvFile = Join-Path $ConfigDir "dotfiles.env"
 

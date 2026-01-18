@@ -1,34 +1,49 @@
 {
   "$schema": "https://raw.githubusercontent.com/JanDeDobbeleer/oh-my-posh/main/themes/schema.json",
+  "upgrade": {
+    "source": "cdn",
+    "interval": "168h",
+    "auto": false,
+    "notice": false
+  },
   "blocks": [
     {
       "type": "prompt",
       "alignment": "left",
       "segments": [
-        { "type": "text", "style": "plain", "foreground": "#ffffff", "template": "╭─" },
         {
+          "template": "\u256d\u2500",
+          "foreground": "#ffffff",
+          "type": "text",
+          "style": "plain"
+        },
+        {
+          "template": "{{ .UserName }}@{{ .HostName }} ",
+          "foreground": "#a6e22e",
           "type": "session",
           "style": "plain",
-          "foreground": "#a6e22e",
-          "foreground_templates": [ "{{ if .SSHSession }}#ae81ff{{ end }}" ],
-          "template": "{{ .UserName }}@{{ .HostName }} "
+          "foreground_templates": [
+            "{{ if .SSHSession }}#ae81ff{{ end }}"
+          ]
         },
         {
-          "type": "path",
-          "style": "plain",
-          "foreground": "#66d9ef",
-          "options": { "style": "folder" },
-          "template": "in <#f92672><b>{{ .Path }}</b></> "
-        },
-        {
-          "type": "git",
-          "style": "plain",
-          "foreground": "#98c379",
           "options": {
-            "fetch_status": true,
-            "branch_icon": " "
+            "style": "folder"
           },
-          "template": "on <#e6db74>{{ .HEAD }}</>{{ if .Working.Changed }} <#f92672> Δ{{ .Working.Modified }}</>{{ end }}{{ if .Staging.Changed }} <#a6e22e> +{{ .Staging.Added }}</>{{ end }} "
+          "template": "in <#f92672><b>{{ .Path }}</b></> ",
+          "foreground": "#66d9ef",
+          "type": "path",
+          "style": "plain"
+        },
+        {
+          "options": {
+            "branch_icon": "\ue0a0 ",
+            "fetch_status": true
+          },
+          "template": "on <#e6db74>{{ .HEAD }}</>{{ if .Working.Changed }} <#f92672> Δ{{ .Working.Modified }}</>{{ end }}{{ if .Staging.Changed }} <#a6e22e> +{{ .Staging.Added }}</>{{ end }} ",
+          "foreground": "#98c379",
+          "type": "git",
+          "style": "plain"
         }
       ]
     },
@@ -37,41 +52,48 @@
       "alignment": "right",
       "segments": [
         {
-          "type": "executiontime",
-          "style": "plain",
+          "options": {
+            "threshold": 500
+          },
+          "template": "{{ if .FormattedMs }}\udb84\udfab {{ .FormattedMs }} {{ end }}",
           "foreground": "#fce94f",
-          "options": { "threshold": 500 },
-          "template": "{{ if .FormattedMs }}󱎫 {{ .FormattedMs }} {{ end }}"
+          "type": "executiontime",
+          "style": "plain"
         },
         {
-          "type": "sysinfo",
-          "style": "plain",
+          "template": "\udb83\udee0 {{ if .Load1 }}{{ printf \"%.2f\" .Load1 }}{{ else }}0.00{{ end }} | \udb80\udf5b {{ printf \"%.0f\" .PhysicalPercentUsed }}% ",
           "foreground": "#83769c",
-          "template": "󰻠 {{ if .Load1 }}{{ printf \"%.2f\" .Load1 }}{{ else }}0.00{{ end }} | 󰍛 {{ printf \"%.0f\" .PhysicalPercentUsed }}% "
+          "type": "sysinfo",
+          "style": "plain"
         },
         {
-          "type": "time",
-          "style": "plain",
+          "template": "{{ .CurrentDate | date \"15:04:05\" }}",
           "foreground": "#75715e",
-          "template": "{{ .CurrentDate | date \"15:04:05\" }}"
+          "type": "time",
+          "style": "plain"
         }
       ]
     },
     {
       "type": "prompt",
       "alignment": "left",
-      "newline": true,
       "segments": [
         {
+          "options": {
+            "always_enabled": true
+          },
+          "template": "\u2570\u2500{{ if .Error }}✘ {{ .Code }}{{ else }}\u25cb{{ end }} ❯ ",
+          "foreground": "#ffffff",
           "type": "status",
           "style": "plain",
-          "foreground": "#ffffff",
-          "foreground_templates": [ "{{ if .Error }}#f92672{{ end }}" ],
-          "options": { "always_enabled": true },
-          "template": "╰─{{ if .Error }}✘ {{ .Code }}{{ else }}○{{ end }} ❯ "
+          "foreground_templates": [
+            "{{ if .Error }}#f92672{{ end }}"
+          ]
         }
-      ]
+      ],
+      "newline": true
     }
   ],
+  "version": 0,
   "final_space": true
 }

@@ -65,7 +65,7 @@ if ($enablePlugins) {
     }
     if (Get-Command atuin -ErrorAction SilentlyContinue) {
         if ($enableAtuin) {
-            atuin init powershell | Invoke-Expression
+            # atuin init powershell | Invoke-Expression
         }
     }
 }
@@ -91,3 +91,13 @@ Set-Alias -Name ll -Value ls
 function la { Get-ChildItem -Force @args }
 # l:  显示所有文件 (同 la, 对应 Zsh 的 l)
 function l { Get-ChildItem -Force @args }
+
+# Import the Chocolatey Profile that contains the necessary code to enable
+# tab-completions to function for `choco`.
+# Be aware that if you are missing these lines from your profile, tab completion
+# for `choco` will not function.
+# See https://ch0.co/tab-completion for details.
+$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+if (Test-Path($ChocolateyProfile)) {
+  Import-Module "$ChocolateyProfile"
+}
