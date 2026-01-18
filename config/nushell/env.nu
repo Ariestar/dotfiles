@@ -18,3 +18,5 @@ $env.VISUAL = "nvim"
 # 语言设置
 $env.LANG = "en_US.UTF-8"
 
+# 使用 Git 附带的 file.exe (支持 -L 参数)
+$env.YAZI_FILE_ONE = 'D:\Workspace\Apps\Scoop\apps\git\current\usr\bin\file.exe'

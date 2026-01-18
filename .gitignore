@@ -1,0 +1,88 @@
+# ==========================================
+# Dotfiles Repository .gitignore
+# ==========================================
+
+# ------------------------------------------
+# Nushell
+# ------------------------------------------
+# History database files (contain sensitive command history)
+config/nushell/history.sqlite3
+config/nushell/history.sqlite3-shm
+config/nushell/history.sqlite3-wal
+config/nushell/history.txt
+
+# ------------------------------------------
+# YASB (Yet Another Status Bar)
+# ------------------------------------------
+# Log files
+config/yasb/*.log
+
+# Backup files
+*.backup
+
+# ------------------------------------------
+# Neovim / LazyVim
+# ------------------------------------------
+# Plugin state (managed by package manager)
+config/nvim/lazy-lock.json
+
+# LSP/Mason installed tools
+config/nvim/.mason/
+config/nvim/mason/
+
+# Swap and undo files
+*.swp
+*.swo
+*~
+
+# ------------------------------------------
+# WezTerm
+# ------------------------------------------
+
+
+# ------------------------------------------
+# Yazi
+# ------------------------------------------
+# Package lock (managed by yazi)
+config/yazi/package.lock
+
+# ------------------------------------------
+# General
+# ------------------------------------------
+# OS generated files
+.DS_Store
+Desktop.ini
+Thumbs.db
+ehthumbs.db
+
+# Editor/IDE specific
+.vscode/
+.idea/
+*.sublime-workspace
+.cursor/
+.trae/
+.antigravity/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Local environment overrides (user-specific)
+*.local
+*.local.*
+
+# Sensitive/Private files
+*.secret
+*.private
+.env.local
+.envrc
+
+# Compiled Lua bytecode
+*.luac
+
+# Python bytecode (if any scripts exist)
+__pycache__/
+*.py[cod]
+
+# Node modules (if any tooling exists)
+node_modules/
