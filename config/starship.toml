@@ -1,0 +1,81 @@
+# Starship 配置文件
+# ~/.config/starship.toml
+
+# 整体格式
+format = """
+$directory\
+$git_branch\
+$git_status\
+$cmd_duration\
+$line_break\
+$character"""
+
+# 右侧提示符
+right_format = """$time"""
+
+# 扫描超时
+scan_timeout = 10
+
+# 命令超时
+command_timeout = 500
+
+# 在新行添加空行
+add_newline = false
+
+# 目录
+[directory]
+style = "bold green"
+format = "[$path]($style)[$read_only]($read_only_style) "
+truncation_length = 3
+truncate_to_repo = true
+read_only = " 🔒"
+
+# Git 分支
+[git_branch]
+symbol = "󰊢 "
+style = "bold magenta"
+format = "on [$symbol$branch]($style) "
+
+# Git 状态
+[git_status]
+style = "bold red"
+format = "[$all_status$ahead_behind]($style)"
+conflicted = "⚔ "
+ahead = "⇡${count} "
+behind = "⇣${count} "
+diverged = "⇕⇡${ahead_count}⇣${behind_count} "
+untracked = "?${count} "
+stashed = "📦 "
+modified = "!${count} "
+staged = "+${count} "
+renamed = "»${count} "
+deleted = "✘${count} "
+
+# 命令执行时间
+[cmd_duration]
+min_time = 500
+style = "bold yellow"
+format = "took [$duration]($style) "
+
+# 提示符字符
+[character]
+success_symbol = "[❯](bold cyan)"
+error_symbol = "[❯](bold red)"
+vimcmd_symbol = "[❮](bold green)"
+
+# 时间（右侧）
+[time]
+disabled = false
+style = "bold cyan"
+format = "[$time]($style)"
+time_format = "%H:%M:%S"
+
+# 语言版本（可选，按需启用）
+[nodejs]
+disabled = true
+
+[python]
+disabled = true
+
+[rust]
+disabled = true
