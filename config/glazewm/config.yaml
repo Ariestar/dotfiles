@@ -173,7 +173,7 @@ binding_modes:
 keybindings:
   # Shift focus in a given direction.
   - commands: ['focus --direction left']
-    bindings: ['win+h', 'win+left']
+    bindings: ['alt+h', 'alt+left']
   - commands: ['focus --direction right']
     bindings: ['alt+l', 'alt+right']
   - commands: ['focus --direction up']
@@ -256,7 +256,7 @@ keybindings:
   # Launch CMD terminal. Alternatively, use `shell-exec wt` or
   # `shell-exec %ProgramFiles%/Git/git-bash.exe` to start Windows
   # Terminal and Git Bash respectively.
-  - commands: ['shell-exec cmd']
+  - commands: ['shell-exec wezterm']
     bindings: ['alt+enter']
 
   # Focus the next/previous active workspace defined in `workspaces` config.
