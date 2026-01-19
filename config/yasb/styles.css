@@ -1,31 +1,45 @@
 :root {
-    --mauve: #cba6f7;
-    --red: #f38ba8;
-    --yellow: #f9e2af;
-    --orange: #fab387;
-    --blue: #89b4fa;
-    --green: #94e2d5;
-    --lavender: #b4befe;
-    --text: #cdd6f4;
-    --subtext1: #bac2de;
-    --subtext0: #a6adc8;
-    --overlay2: #9399b2;
-    --overlay1: #7f849c;
-    --overlay0: #6c7086;
-    --surface2: #585b70;
-    --surface1: #45475a;
-    --surface0: #282936;
-    --base: rgb(17, 18, 19);
-    --crust: rgba(32, 32, 43, 0.8);
+    /* --- UNIFIED CLEAN PALETTE --- */
+    --base: #090915;
+    --mantle: #12121E;
+    --crust: #090915;
+    --text: #c1c1c4;
+    --subtext0: #c1c1c4;
+    --subtext1: #c1c1c4;
+    --surface0: #1F1F2A;
+    --surface1: #2E2E38;
+    --surface2: #2E2E38;
+    --overlay0: #2E2E38;
+    --overlay1: #c1c1c4;
+    --overlay2: #c1c1c4;
+    --red: #889cbd;
+    --green: #889cbd;
+    --yellow: #889cbd;
+    --blue: #666c82;
+    --mauve: #666c82;
+    --teal: #889cbd;
+    --lavender: #666c82;
+    --rosewater: #889cbd;
+    --flamingo: #889cbd;
+    --pink: #889cbd;
+    --maroon: #889cbd;
+    --peach: #889cbd;
+    --sky: #666c82;
+    --sapphire: #666c82;
 }
 
 * {
-    font-size: 12px;
+    font-size: 14px;
+    /* CHANGED: Made default text brighter (was subtext0) */
     color: var(--text);
-    font-weight: 600;
-    font-family: "CaskaydiaCove Nerd Font Mono", "Cascadia Code", "Consolas", monospace;
+    font-weight: 500;
+    font-family: "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "CaskaydiaCove NFM", "Cascadia Code", "Consolas", "Microsoft YaHei UI", "Microsoft YaHei", monospace;
     margin: 0;
     padding: 0;
+    /* Font smoothing for better rendering */
+    -webkit-font-smoothing: subpixel-antialiased;
+    -moz-osx-font-smoothing: auto;
+    text-rendering: optimizeSpeed;
 }
 
 .yasb-bar {
@@ -34,7 +48,6 @@
     background-color: var(--crust);
 }
 
-/* Global styles for ToolTip */
 .tooltip {
     background-color: var(--base);
     border: 1px solid var(--surface0);
@@ -42,23 +55,21 @@
     color: var(--text);
     padding: 4px 8px 5px 8px;
     font-size: 12px;
-    font-family: 'Segoe UI';
+    font-family: "CaskaydiaCove Nerd Font Mono", "Segoe UI", sans-serif;
     font-weight: 600;
     margin-top: 4px;
 }
 
-/* Global styles for Progress Circle */
 .progress-circle {
     padding-right: 4px;
 }
 
-/* Global context menu style */
 .context-menu,
 .context-menu .menu-checkbox {
     background-color: #202020;
     border: none;
     padding: 4px 0px;
-    font-family: 'Segoe UI';
+    font-family: "CaskaydiaCove Nerd Font Mono", "Segoe UI", sans-serif;
     font-size: 12px;
     color: #FFFFFF;
 }
@@ -101,7 +112,7 @@
     font-size: 12px;
     margin: 0;
     color: #FFFFFF;
-    font-family: 'Segoe UI'
+    font-family: "CaskaydiaCove Nerd Font Mono", "Segoe UI", sans-serif;
 }
 
 .context-menu .submenu::item:disabled {
@@ -142,6 +153,7 @@
 .icon {
     font-size: 11px;
     padding-right: 4px;
+    font-family: "CaskaydiaCove Nerd Font Mono", "Segoe Fluent Icons", monospace;
 }
 
 .widget .label {
@@ -155,32 +167,37 @@
     border: 1px solid var(--surface1);
 }
 
-.komorebi-workspaces .offline-status {
+.glazewm-workspaces .offline-status {
     color: var(--surface2);
     font-size: 12px;
     padding: 0 0 0 4px;
     font-weight: 600;
 }
 
-.komorebi-workspaces .ws-btn {
+.glazewm-workspaces .ws-btn {
     border: none;
-    background-color: transparent;
-    margin: 0 3px;
-    padding: 0;
-    font-size: 14px;
-    color: var(--surface2);
+    background-color: var(--surface0);
+    margin: 0 2px;
+    padding: 2px 8px;
+    font-size: 13px;
+    color: var(--overlay1);
+    border-radius: 4px;
+    min-width: 24px;
 }
 
-.komorebi-workspaces .ws-btn:hover {
-    color: var(--overlay2);
-}
-
-.komorebi-workspaces .ws-btn.populated {
+.glazewm-workspaces .ws-btn:hover {
+    background-color: var(--surface1);
     color: var(--text);
 }
 
-.komorebi-workspaces .ws-btn.active {
+.glazewm-workspaces .ws-btn.populated {
+    background-color: var(--surface1);
     color: var(--text);
+}
+
+.glazewm-workspaces .ws-btn.active {
+    background-color: var(--blue);
+    color: var(--crust);
 }
 
 .cpu-widget .icon {
@@ -197,14 +214,15 @@
 }
 
 .calendar {
-    background-color: var(--crust)
+    background-color: var(--crust);
+    font-family: "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "CaskaydiaCove NFM", "Cascadia Code", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
 }
 
 .calendar .calendar-table,
 .calendar .calendar-table::item {
     background-color: rgba(17, 17, 27, 0);
     color: rgba(162, 177, 196, 0.85);
-    font-family: 'Segoe UI';
+    font-family: "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "CaskaydiaCove NFM", "Cascadia Code", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
     margin: 0;
     padding: 0;
     border: none;
@@ -226,7 +244,7 @@
 .calendar .date-label,
 .calendar .week-label,
 .calendar .holiday-label {
-    font-family: 'Segoe UI';
+    font-family: "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "CaskaydiaCove NFM", "Cascadia Code", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
     font-size: 16px;
     color: #fff;
     font-weight: 700;
@@ -321,25 +339,29 @@
 }
 
 .audio-menu {
-    background-color: var(--crust)
+    background-color: var(--crust);
+    font-family: "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "CaskaydiaCove NFM", "Cascadia Code", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
 }
 
 .volume-widget .icon {
     font-size: 12px;
     color: var(--green);
+    font-family: "CaskaydiaCove Nerd Font Mono", "Segoe Fluent Icons", monospace;
 }
 
 .language-widget .icon {
     color: var(--green);
+    font-family: "CaskaydiaCove Nerd Font Mono", "Segoe Fluent Icons", monospace;
 }
 
 .language-menu {
     background-color: var(--crust);
     min-width: 300px;
+    font-family: "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "CaskaydiaCove NFM", "Cascadia Code", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
 }
 
 .language-menu .header {
-    font-family: 'Segoe UI';
+    font-family: "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "CaskaydiaCove NFM", "Cascadia Code", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
     font-size: 14px;
     font-weight: 600;
     margin-bottom: 2px;
@@ -347,7 +369,7 @@
 }
 
 .language-menu .footer {
-    font-family: 'Segoe UI';
+    font-family: "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "CaskaydiaCove NFM", "Cascadia Code", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
     font-size: 12px;
     font-weight: 600;
     padding: 12px;
@@ -393,13 +415,13 @@
 
 .language-menu .language-item .name {
     font-weight: 600;
-    font-family: 'Segoe UI';
+    font-family: "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "CaskaydiaCove NFM", "Cascadia Code", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
     font-size: 14px;
 }
 
 .language-menu .language-item .layout {
     font-weight: 600;
-    font-family: 'Segoe UI';
+    font-family: "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "CaskaydiaCove NFM", "Cascadia Code", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
     font-size: 12px;
 }
 
@@ -449,12 +471,13 @@
 .home-menu {
     background-color: var(--crust);
     border-radius: 8px;
+    font-family: "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "CaskaydiaCove NFM", "Cascadia Code", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
 }
 
 .home-menu .menu-item {
     padding: 8px 48px 9px 16px;
     font-size: 12px;
-    font-family: 'Segoe UI';
+    font-family: "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "CaskaydiaCove NFM", "Cascadia Code", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
     color: var(--text);
     font-weight: 600;
 }
@@ -476,7 +499,8 @@
 .media-menu {
     min-width: 360px;
     max-width: 360px;
-    background-color: var(--crust)
+    background-color: var(--crust);
+    font-family: "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "CaskaydiaCove NFM", "Cascadia Code", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
 }
 
 .media-menu .title,
@@ -485,7 +509,7 @@
     font-size: 14px;
     font-weight: 600;
     margin-left: 10px;
-    font-family: 'Segoe UI'
+    font-family: "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "CaskaydiaCove NFM", "Cascadia Code", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
 }
 
 .media-menu .artist {
@@ -558,7 +582,7 @@
 
 .media-menu .playback-time {
     font-size: 13px;
-    font-family: 'Segoe UI';
+    font-family: "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "CaskaydiaCove NFM", "Cascadia Code", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
     color: #7f849c;
     margin-top: 0px;
     min-width: 100px;
@@ -598,6 +622,7 @@
 
 .weather-card {
     background-color: var(--crust);
+    font-family: "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "CaskaydiaCove NFM", "Cascadia Code", "Microsoft YaHei UI", "Microsoft YaHei", "Segoe UI", sans-serif;
 }
 
 .weather-card-today .label {
@@ -643,6 +668,11 @@
     border: none;
     background-color: rgba(40, 40, 60, 0.0);
     min-height: 150px;
+}
+
+/* Force date-label to use monospaced font for numbers */
+.calendar .date-label {
+    font-family: "CaskaydiaCove Nerd Font", "CaskaydiaCove NF", "CaskaydiaCove NFM", "Cascadia Code", "Consolas", monospace !important;
 }
 
 .weather-card .hourly-data {

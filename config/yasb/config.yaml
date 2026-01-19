@@ -38,15 +38,15 @@ bars:
     widgets:
       left: 
       - "home"
-      - "komorebi_workspaces"
+      - "glazewm_workspaces"
       - "active_window"
       center:
-      - "clock"
+      - "media"
       right:
       - "systray"
       - "grouped_widgets"
+      - "clock"
       - "language"
-      - "media"
       - "volume"
       - "notifications"
       - "power_menu"
@@ -62,8 +62,8 @@ widgets:
         on_middle: "toggle_play_pause"
         on_right: "toggle_label"
       max_field_size:
-        label: 16
-        label_alt: 16
+        label: 60
+        label_alt: 60
       show_thumbnail: true
       controls_only: false
       controls_left: false
@@ -211,29 +211,26 @@ widgets:
       callbacks:
         on_left: "toggle_calendar"
         on_right: "toggle_label"
-  komorebi_workspaces:
-    type: "komorebi.workspaces.WorkspaceWidget"
+  glazewm_workspaces:
+    type: "glazewm.workspaces.GlazewmWorkspacesWidget"
     options:
-      label_offline: "\u23fc Offline"
-      label_workspace_btn: "\udb80\udd30"
-      label_workspace_active_btn: "\udb80\udd2f"
-      label_workspace_populated_btn: "\udb80\udd30"
-      label_default_name: "{index}"
-      label_zero_index: false
+      populated_label: "{name}"
+      empty_label: "{name}"
+      active_populated_label: "{name}"
+      active_empty_label: "{name}"
       hide_empty_workspaces: false
       hide_if_offline: true
-      animation: false
   volume:
     type: "yasb.volume.VolumeWidget"
     options:
       label: "<span>{icon}</span> {level}"
       label_alt: "{level}"
       volume_icons:
-        - "\ueee8"
-        - "\uf026"
-        - "\uf027"
-        - "\uf027"
-        - "\uf028"
+        - "\U000f075f"
+        - "\U000f057f"
+        - "\U000f0580"
+        - "\U000f057e"
+        - "\U000f057e"
       callbacks:
         on_left: "toggle_volume_menu"
         on_right: "toggle_mute"

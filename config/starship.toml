@@ -11,7 +11,7 @@ $line_break\
 $character"""
 
 # 右侧提示符
-right_format = """$time"""
+right_format = """$memory_usage $cmd_duration $time"""
 
 # 扫描超时
 scan_timeout = 10
@@ -55,7 +55,7 @@ deleted = "✘${count} "
 [cmd_duration]
 min_time = 500
 style = "bold yellow"
-format = "took [$duration]($style) "
+format = "[$duration]($style) "
 
 # 提示符字符
 [character]
@@ -69,6 +69,14 @@ disabled = false
 style = "bold cyan"
 format = "[$time]($style)"
 time_format = "%H:%M:%S"
+
+# 内存使用（右侧）
+[memory_usage]
+disabled = false
+threshold = 0
+style = "bold green"
+symbol = "󰍛 "
+format = "[$symbol$ram_pct]($style) "
 
 # 语言版本（可选，按需启用）
 [nodejs]
