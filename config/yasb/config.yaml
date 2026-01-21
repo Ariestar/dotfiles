@@ -39,8 +39,8 @@ bars:
       left: 
       - "home"
       - "glazewm_workspaces"
-      - "active_window"
       center:
+      - "active_window"
       - "media"
       right:
       - "systray"
@@ -214,11 +214,11 @@ widgets:
   glazewm_workspaces:
     type: "glazewm.workspaces.GlazewmWorkspacesWidget"
     options:
-      populated_label: "{name}"
-      empty_label: "{name}"
-      active_populated_label: "{name}"
-      active_empty_label: "{name}"
-      hide_empty_workspaces: false
+      populated_label: "\uf111"
+      empty_label: "\uf10c"
+      active_populated_label: "\uf192"
+      active_empty_label: "\uf1db"
+      hide_empty_workspaces: true
       hide_if_offline: true
   volume:
     type: "yasb.volume.VolumeWidget"

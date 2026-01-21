@@ -76,10 +76,10 @@ window_effects:
 
     # Change the transparency of the window.
     transparency:
-      enabled: false
+      enabled: true
       # Can be something like '95%' or '0.95' for slightly transparent windows.
       # '0' or '0%' is fully transparent (and, by consequence, unfocusable).
-      opacity: '95%'
+      opacity: '100%'
 
   # Visual effects to apply to non-focused windows.
   other_windows:
@@ -92,8 +92,8 @@ window_effects:
       enabled: false
       style: 'square'
     transparency:
-      enabled: false
-      opacity: '0%'
+      enabled: true
+      opacity: '85%'
 
 window_behavior:
   # New windows are created in this state whenever possible.
@@ -121,8 +121,11 @@ window_behavior:
 
 workspaces:
   - name: '1'
+    display_name: '🎵 Music'
   - name: '2'
+    display_name: '📝 Obsidian'
   - name: '3'
+    display_name: '💻 Terminal'
   - name: '4'
   - name: '5'
   - name: '6'
@@ -131,6 +134,21 @@ workspaces:
   - name: '9'
 
 window_rules:
+  # 网易云音乐 -> Workspace 1
+  - commands: ['move --workspace 1']
+    match:
+      - window_process: { equals: 'cloudmusic' }
+
+  # Obsidian -> Workspace 2
+  - commands: ['move --workspace 2']
+    match:
+      - window_process: { equals: 'Obsidian' }
+
+  # WezTerm -> Workspace 3
+  - commands: ['move --workspace 3']
+    match:
+      - window_process: { equals: 'wezterm-gui' }
+
   - commands: ['ignore']
     match:
       # Ignores any Zebar windows.
@@ -239,7 +257,7 @@ keybindings:
 
   # Close focused window.
   - commands: ['close']
-    bindings: ['alt+shift+q']
+    bindings: ['alt+w']
 
   # Kill GlazeWM process safely.
   - commands: ['wm-exit']
