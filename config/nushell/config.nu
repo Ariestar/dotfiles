@@ -359,7 +359,7 @@ alias .. = cd ..
 alias ... = cd ../..
 alias .... = cd ../../..
 alias ~ = cd ~
-alias cd- = cd V:\Coding\dotfiles
+alias dot = cd V:\Coding\dotfiles
 
 # ls 增强
 alias ll = ls -l
