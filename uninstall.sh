@@ -30,6 +30,8 @@ echo -e "\n${CYAN}📂 Removing configuration links...${NC}"
 remove_link "$HOME/.config/nushell"
 remove_link "$HOME/.config/wezterm"
 remove_link "$HOME/.config/starship.toml"
+remove_link "$HOME/.config/nvim"
+remove_link "$HOME/.config/yazi"
 remove_link "$HOME/.zshrc"
 remove_link "$HOME/dotfiles"
 
@@ -50,6 +52,8 @@ if [[ "$response" =~ ^[yY]$ ]]; then
         "git-delta"
         "bottom"
         "fzf"
+        "yazi"
+        "neovim"
         "font-caskaydia-cove-nerd-font"
     )
     

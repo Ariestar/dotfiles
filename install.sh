@@ -80,6 +80,8 @@ TOOLS=(
     "git-delta"
     "bottom"
     "fzf"
+    "yazi"
+    "neovim"
     "font-caskaydia-cove-nerd-font"
 )
 
@@ -125,6 +127,12 @@ create_symlink "$SCRIPT_DIR/config/wezterm" "$CONFIG_DIR/wezterm"
 
 # Starship
 create_symlink "$SCRIPT_DIR/config/starship.toml" "$CONFIG_DIR/starship.toml"
+
+# Neovim
+create_symlink "$SCRIPT_DIR/config/nvim" "$CONFIG_DIR/nvim"
+
+# Yazi
+create_symlink "$SCRIPT_DIR/config/yazi" "$CONFIG_DIR/yazi"
 
 # Zsh
 create_symlink "$SCRIPT_DIR/config/zsh/.zshrc" "$HOME/.zshrc"
