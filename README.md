@@ -53,18 +53,17 @@ New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\wezterm -Target $
 New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\starship.toml -Target $PWD\config\starship.toml
 ```
 
-#### Linux / macOS (Zsh)
-
+#### Linux / macOS (Homebrew)
 在终端中运行安装脚本：
-
 ```bash
 # 进入仓库目录
 cd dotfiles
-
 # 赋予执行权限并运行
 chmod +x install.sh
 ./install.sh
 ```
+> **注意**: 脚本会自动检测并安装 **Homebrew**，然后通过 Brew 安装所有依赖 (Nushell, Starship, Atuin, etc.) 并建立软链接。
+
 
 > **注意**: 脚本会将 `~/.zshrc` 链接到仓库中的 `zsh/.zshrc`，并建立 `~/dotfiles` 的软链接以确保路径一致性。
 

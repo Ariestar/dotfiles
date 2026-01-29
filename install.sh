@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==============================================================================
-# 🚀 Dotfiles Installation Script (Linux/macOS)
-# Installs configuration for Nushell, Starship, WezTerm, etc.
+# 🚀 Dotfiles Installation Script (Homebrew Edition)
+# Installs configuration for Nushell, Starship, WezTerm, etc. using Homebrew
 # ==============================================================================
 
 set -e
@@ -13,7 +13,7 @@ CYAN='\033[0;36m'
 RED='\033[0;31m'
 NC='\033[0m'
 
-echo -e "${CYAN}🔧 Starting Dotfiles Installation...${NC}\n"
+echo -e "${CYAN}🔧 Starting Dotfiles Installation (Homebrew)...${NC}\n"
 
 # Paths
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -49,21 +49,73 @@ check_cmd() {
 }
 
 # ------------------------------------------------------------------------------
-# 1. Link Dotfiles to ~/dotfiles
+# 1. Install Homebrew
 # ------------------------------------------------------------------------------
 
-if [ ! -d "$DOTFILES_LINK" ] && [ ! -L "$DOTFILES_LINK" ]; then
-    echo -e "${CYAN}🔗 Creating ~/dotfiles symlink...${NC}"
-    ln -s "$SCRIPT_DIR" "$DOTFILES_LINK"
+if ! check_cmd brew; then
+    echo -e "${YELLOW}🍺 Homebrew not found. Installing...${NC}"
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    
+    # Eval brew shellenv for Linux
+    if [ -d "/home/linuxbrew/.linuxbrew" ]; then
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    elif [ -d "/opt/homebrew" ]; then
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    fi
 else
-    echo -e "${GREEN}✅ ~/dotfiles currently exists${NC}"
+    echo -e "${GREEN}✅ Homebrew is already installed${NC}"
 fi
 
 # ------------------------------------------------------------------------------
-# 2. Config Symlinks
+# 2. Install Packages via Homebrew
 # ------------------------------------------------------------------------------
 
-echo -e "\n${CYAN}📂 Setting up configuration links...${NC}"
+TOOLS=(
+    "nushell"
+    "starship"
+    "zoxide"
+    "atuin"
+    "bat"
+    "lsd"
+    "git-delta"
+    "bottom"
+    "fzf"
+    "font-caskaydia-cove-nerd-font"
+)
+
+echo -e "\n${CYAN}📦 Installing dependencies with Homebrew...${NC}"
+
+# Update brew first
+echo -e "Running brew update..."
+brew update
+
+for tool in "${TOOLS[@]}"; do
+    if brew list "$tool" &>/dev/null; then
+        echo -e "${GREEN}✅ $tool already installed${NC}"
+    else
+        echo -e "${YELLOW}📥 Installing $tool...${NC}"
+        # Nerd font might need cask on macOS, generic install usually works or taps
+        if [[ "$tool" == "font-caskaydia-cove-nerd-font" ]]; then
+             brew list --cask "$tool" &>/dev/null || brew install --cask "$tool" || echo -e "${RED}⚠️  Font install skipped (Linux/No Cask support potentially)${NC}"
+        else
+             brew install "$tool"
+        fi
+    fi
+done
+
+# ------------------------------------------------------------------------------
+# 3. Link Dotfiles
+# ------------------------------------------------------------------------------
+
+# Ensure ~/dotfiles link
+if [ ! -d "$DOTFILES_LINK" ] && [ ! -L "$DOTFILES_LINK" ]; then
+    echo -e "\n${CYAN}🔗 Creating ~/dotfiles symlink...${NC}"
+    ln -s "$SCRIPT_DIR" "$DOTFILES_LINK"
+else
+    echo -e "\n${GREEN}✅ ~/dotfiles correct${NC}"
+fi
+
+echo -e "\n${CYAN}📂 Linking config files...${NC}"
 
 # Nushell
 create_symlink "$SCRIPT_DIR/config/nushell" "$CONFIG_DIR/nushell"
@@ -74,102 +126,19 @@ create_symlink "$SCRIPT_DIR/config/wezterm" "$CONFIG_DIR/wezterm"
 # Starship
 create_symlink "$SCRIPT_DIR/config/starship.toml" "$CONFIG_DIR/starship.toml"
 
-# Zsh (Optional fallback)
-if [ -f "$SCRIPT_DIR/config/zsh/.zshrc" ]; then
-    create_symlink "$SCRIPT_DIR/config/zsh/.zshrc" "$HOME/.zshrc"
-fi
+# Zsh
+create_symlink "$SCRIPT_DIR/config/zsh/.zshrc" "$HOME/.zshrc"
 
 # ------------------------------------------------------------------------------
-# 3. Install Tools
+# 4. Final Setup (Nushell Caches)
 # ------------------------------------------------------------------------------
 
-echo -e "\n${CYAN}📦 Checking and installing dependencies...${NC}"
+echo -e "\n${CYAN}⚙️  Generating Nu cache files...${NC}"
+mkdir -p "$HOME/.cache"
 
-# Starship
-if ! check_cmd starship; then
-    echo -e "${YELLOW}📥 Installing Starship...${NC}"
-    curl -sS https://starship.rs/install.sh | sh -s -- -y
-else
-    echo -e "${GREEN}✅ Starship is already installed${NC}"
-fi
-
-# Zoxide
-if ! check_cmd zoxide; then
-    echo -e "${YELLOW}📥 Installing Zoxide...${NC}"
-    curl -sS https://raw.githubusercontent.com/ajeetdsouza/zoxide/main/install.sh | bash
-else
-    echo -e "${GREEN}✅ Zoxide is already installed${NC}"
-fi
-
-# Atuin
-# Note: Atuin install script might ask for confirmation or be interactive.
-# We'll use the official install script.
-if ! check_cmd atuin; then
-    echo -e "${YELLOW}📥 Installing Atuin...${NC}"
-    # Use the official installer, pipe to bash
-    curl --proto '=https' --tlsv1.2 -sSf https://setup.atuin.sh | bash
-else
-    echo -e "${GREEN}✅ Atuin is already installed${NC}"
-fi
-
-# Nerd Fonts
-FONT_DIR="$HOME/.local/share/fonts"
-if [ ! -d "$FONT_DIR" ]; then
-    mkdir -p "$FONT_DIR"
-fi
-
-if check_cmd fc-list && fc-list | grep -qi "Caskaydia"; then
-    echo -e "${GREEN}✅ CaskaydiaCove Nerd Font detected${NC}"
-else
-    echo -e "${YELLOW}📥 Downloading CaskaydiaCove Nerd Font...${NC}"
-    TEMP_DIR=$(mktemp -d)
-    curl -fLo "$TEMP_DIR/font.zip" "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/CascadiaCode.zip"
-    
-    if check_cmd unzip; then
-        unzip -q "$TEMP_DIR/font.zip" -d "$TEMP_DIR"
-        find "$TEMP_DIR" -maxdepth 2 -type f -name "*Regular*.ttf" -exec cp {} "$FONT_DIR/" \; || \
-        find "$TEMP_DIR" -maxdepth 2 -type f -name "*.ttf" -exec cp {} "$FONT_DIR/" \;
-        
-        if check_cmd fc-cache; then
-            fc-cache -f &> /dev/null
-        fi
-        echo -e "${GREEN}✅ Font installed${NC}"
-    else
-        echo -e "${RED}❌ 'unzip' not found. Skipping font installation.${NC}"
-    fi
-    rm -rf "$TEMP_DIR"
-fi
-
-# ------------------------------------------------------------------------------
-# 4. Check Nushell
-# ------------------------------------------------------------------------------
-
-if ! check_cmd nu; then
-    echo -e "\n${YELLOW}⚠️  Nushell (nu) is not detected!${NC}"
-    echo -e "This configuration is designed for Nushell."
-    echo -e "Please install it using your package manager or from: https://github.com/nushell/nushell"
-    echo -e "Example: ${CYAN}brew install nushell${NC} or ${CYAN}cargo install nu${NC}"
-else
-    echo -e "\n${GREEN}✅ Nushell is installed${NC}"
-    
-    # Generate cache files required by config.nu
-    echo -e "${CYAN}Generating Atuin/Zoxide init files for Nushell...${NC}"
-    mkdir -p "$HOME/.cache"
-    
-    if check_cmd zoxide; then
-        zoxide init nu > "$HOME/.cache/.zoxide.nu"
-    else
-        echo -e "${YELLOW}⚠️  Zoxide not found. Creating empty config to prevent shell errors.${NC}"
-        touch "$HOME/.cache/.zoxide.nu"
-    fi
-    
-    if check_cmd atuin; then
-        atuin init nu > "$HOME/.cache/.atuin.nu" 
-    else
-        echo -e "${YELLOW}⚠️  Atuin not found. Creating empty config to prevent shell errors.${NC}"
-        touch "$HOME/.cache/.atuin.nu"
-    fi
-fi
+# Generate init files using the newly installed binaries
+zoxide init nu > "$HOME/.cache/.zoxide.nu"
+atuin init nu > "$HOME/.cache/.atuin.nu"
 
 echo -e "\n${GREEN}🎉 Installation Complete!${NC}"
-echo -e "Please restart your terminal or run '${CYAN}nu${NC}' to start."
+echo -e "You are ready to rock with Nushell + Starship + Homebrew tools."

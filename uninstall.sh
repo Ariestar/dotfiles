@@ -1,7 +1,7 @@
 #!/bin/bash
 # ==============================================================================
-# 🗑️ Dotfiles Uninstall Script
-# Reverts changes made by install.sh (Removes symlinks)
+# 🗑️ Dotfiles Uninstall Script (Homebrew Edition)
+# Reverts configuration and optionally uninstalls Homebrew packages
 # ==============================================================================
 
 set -e
@@ -21,10 +21,6 @@ remove_link() {
     if [ -L "$target" ]; then
         echo -e "${YELLOW}🔗 Removing symlink: $target${NC}"
         rm "$target"
-    elif [ -e "$target" ]; then
-        echo -e "${RED}❌ $target is not a symlink. Skipping to prevent data loss.${NC}"
-    else
-        echo -e "${CYAN}ℹ️  $target does not exist.${NC}"
     fi
 }
 
@@ -37,26 +33,38 @@ remove_link "$HOME/.config/starship.toml"
 remove_link "$HOME/.zshrc"
 remove_link "$HOME/dotfiles"
 
-# 2. Restore Backups (Optional hint)
-echo -e "\n${CYAN}📦 Backup Restoration Hint:${NC}"
-echo -e "This script removed the symlinks pointing to this repo."
-echo -e "If install.sh created backups (e.g., .zshrc.bak.2024...), you can restore them manually:"
-echo -e "${GREEN}ls -la ~/.zshrc.bak*${NC}"
-echo -e "${GREEN}ls -la ~/.config/nushell.bak*${NC}"
+# 2. Uninstall Packages (Interactive)
+echo -e "\n${CYAN}📦 Homebrew Packages:${NC}"
+echo -e "Do you want to uninstall the dotfiles tools via Homebrew?"
+echo -e "(nushell, starship, zoxide, atuin, bat, lsd, etc.)"
+read -r -p "Uninstall packages? [y/N] " response
 
-# 3. Uninstall Tools Hint
-echo -e "\n${CYAN}🛠️  Uninstalling Tools:${NC}"
-echo -e "To uninstall the tools, you can usually verify their location and remove them:"
+if [[ "$response" =~ ^[yY]$ ]]; then
+    TOOLS=(
+        "nushell"
+        "starship"
+        "zoxide"
+        "atuin"
+        "bat"
+        "lsd"
+        "git-delta"
+        "bottom"
+        "fzf"
+        "font-caskaydia-cove-nerd-font"
+    )
+    
+    echo -e "${YELLOW}Uninstalling tools...${NC}"
+    for tool in "${TOOLS[@]}"; do
+        brew uninstall "$tool" || true
+    done
+    
+    # Cleanup caches
+    rm -f "$HOME/.cache/.zoxide.nu"
+    rm -f "$HOME/.cache/.atuin.nu"
+    
+    echo -e "${GREEN}✅ Packages uninstalled${NC}"
+else
+    echo -e "${CYAN}ℹ️  Skipping package uninstallation${NC}"
+fi
 
- echo -e "\n1. ${GREEN}Starship${NC}:"
- echo -e "   rm \$(which starship)"
-
- echo -e "\n2. ${GREEN}Zoxide${NC}:"
- echo -e "   rm \$(which zoxide)"
- echo -e "   rm ~/.cache/.zoxide.nu"
-
- echo -e "\n3. ${GREEN}Atuin${NC}:"
- echo -e "   atuin uninstall"
- echo -e "   # Or: rm \$(which atuin); rm -rf ~/.local/share/atuin ~/.config/atuin"
-
-echo -e "\n${GREEN}✅ Cleanup of symlinks complete!${NC}"
+echo -e "\n${GREEN}✅ Cleanup complete!${NC}"
