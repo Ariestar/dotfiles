@@ -297,6 +297,13 @@ $env.config = {
                     { edit: moveright }
                 ]
             }
+            event: {
+                until: [
+                    { send: historyhintcomplete }
+                    { send: menuright }
+                    { edit: moveright }
+                ]
+            }
         }
         {
             name: move_word_left

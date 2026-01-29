@@ -15,7 +15,7 @@ dotfiles/
 
 ## ✨ 功能特性
 
-*   **统一终端栈**: Winsows 默认使用 WezTerm + Nushell + Starship。
+*   **统一终端栈**: Windows 默认使用 WezTerm + Nushell + Starship。
 *   **高可定制**: WezTerm 外观与按键、Nushell 语法与别名、Starship 提示符风格可组合调整。
 *   **环境隔离**: 配置文件通过软链接指向本仓库，方便通过 Git 进行版本控制和同步。
 *   **常用别名**: 预设 `g` (git), `ll` (ls) 等常用别名。
@@ -84,6 +84,8 @@ chmod +x install.sh
 
 *   **Nushell**: 重启终端或运行 `source ~/.config/nushell/config.nu`
 *   **Zsh**: 重启终端或运行 `source ~/.zshrc`
+
+## 🧭 版本 2.0.0 迁移说明
 
 *   Windows 终端方案统一为 WezTerm + Nushell + Starship。
 *   不再使用 Windows Terminal / PowerShell / Oh My Posh。
