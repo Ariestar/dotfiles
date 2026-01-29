@@ -18,5 +18,18 @@ $env.VISUAL = "nvim"
 # 语言设置
 $env.LANG = "en_US.UTF-8"
 
-# 使用 Git 附带的 file.exe (支持 -L 参数)
-$env.YAZI_FILE_ONE = 'D:\Workspace\Apps\Scoop\apps\git\current\usr\bin\file.exe'
+# 使用 Git 附带的 file.exe (支持 -L 参数) - Windows Only
+if $nu.os-info.name == 'windows' {
+    $env.YAZI_FILE_ONE = 'D:\Workspace\Apps\Scoop\apps\git\current\usr\bin\file.exe'
+}
+
+# Define DOTFILES path
+$env.DOTFILES = (
+    if ("~/dotfiles" | path expand | path exists) {
+        ("~/dotfiles" | path expand)
+    } else if ($nu.os-info.name == 'windows') {
+        "V:\\Coding\\dotfiles"
+    } else {
+        ($nu.home-dir | path join "dotfiles")
+    }
+)

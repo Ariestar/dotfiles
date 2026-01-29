@@ -359,7 +359,7 @@ alias .. = cd ..
 alias ... = cd ../..
 alias .... = cd ../../..
 alias ~ = cd ~
-alias dot = cd V:\Coding\dotfiles
+alias dot = cd $env.DOTFILES
 
 # ls 增强
 alias ll = ls -l
@@ -391,6 +391,7 @@ alias vim = nvim
 # scoop
 alias sup = scoop update '*' 
 
+# 美化工具替代 (需安装: scoop install bat lsd delta bottom)
 # 美化工具替代 (需安装: scoop install bat lsd delta bottom)
 alias cat = bat --style=auto
 alias ls = lsd
