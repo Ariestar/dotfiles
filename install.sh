@@ -139,7 +139,7 @@ mkdir -p "$HOME/.cache"
 # Generate init files using the newly installed binaries
 echo -e "Generating .zoxide.nu..."
 if command -v zoxide &> /dev/null; then
-    zoxide init nu > "$HOME/.cache/.zoxide.nu"
+    zoxide init nushell > "$HOME/.cache/.zoxide.nu"
 else
     echo -e "${YELLOW}⚠️  Zoxide not found (checking path?). Creating empty config.${NC}"
     touch "$HOME/.cache/.zoxide.nu"
