@@ -62,8 +62,8 @@ New-Item -ItemType SymbolicLink -Path $env:USERPROFILE\.config\starship.toml -Ta
 cd dotfiles
 
 # 赋予执行权限并运行
-chmod +x zsh/install.sh
-./zsh/install.sh
+chmod +x install.sh
+./install.sh
 ```
 
 > **注意**: 脚本会将 `~/.zshrc` 链接到仓库中的 `zsh/.zshrc`，并建立 `~/dotfiles` 的软链接以确保路径一致性。

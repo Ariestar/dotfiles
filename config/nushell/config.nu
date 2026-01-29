@@ -297,6 +297,13 @@ $env.config = {
                     { edit: moveright }
                 ]
             }
+            event: {
+                until: [
+                    { send: historyhintcomplete }
+                    { send: menuright }
+                    { edit: moveright }
+                ]
+            }
         }
         {
             name: move_word_left
@@ -359,7 +366,7 @@ alias .. = cd ..
 alias ... = cd ../..
 alias .... = cd ../../..
 alias ~ = cd ~
-alias cd- = cd V:\Coding\dotfiles
+alias dot = cd $env.DOTFILES
 
 # ls 增强
 alias ll = ls -l
@@ -391,6 +398,7 @@ alias vim = nvim
 # scoop
 alias sup = scoop update '*' 
 
+# 美化工具替代 (需安装: scoop install bat lsd delta bottom)
 # 美化工具替代 (需安装: scoop install bat lsd delta bottom)
 alias cat = bat --style=auto
 alias ls = lsd
