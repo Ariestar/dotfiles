@@ -137,8 +137,21 @@ echo -e "\n${CYAN}⚙️  Generating Nu cache files...${NC}"
 mkdir -p "$HOME/.cache"
 
 # Generate init files using the newly installed binaries
-zoxide init nu > "$HOME/.cache/.zoxide.nu"
-atuin init nu > "$HOME/.cache/.atuin.nu"
+echo -e "Generating .zoxide.nu..."
+if command -v zoxide &> /dev/null; then
+    zoxide init nu > "$HOME/.cache/.zoxide.nu"
+else
+    echo -e "${YELLOW}⚠️  Zoxide not found (checking path?). Creating empty config.${NC}"
+    touch "$HOME/.cache/.zoxide.nu"
+fi
+
+echo -e "Generating .atuin.nu..."
+if command -v atuin &> /dev/null; then
+    atuin init nu > "$HOME/.cache/.atuin.nu"
+else
+    echo -e "${YELLOW}⚠️  Atuin not found. Creating empty config.${NC}"
+    touch "$HOME/.cache/.atuin.nu"
+fi
 
 echo -e "\n${GREEN}🎉 Installation Complete!${NC}"
 echo -e "You are ready to rock with Nushell + Starship + Homebrew tools."
